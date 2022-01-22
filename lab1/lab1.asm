@@ -10,9 +10,16 @@ LoopIn  BRz BitEnd
 
 
 
-BitEnd  ADD R3, R3, #-8
-        ADD R3, R3, #-1
+BitEnd  ADD R3, R3, #9
         BRnz ZeroAdd
+        ADD R3, R3, #9
+        ADD R3, R3, #-10
+        BR OutCom
+ZeroAdd ADD R3, R3, #9
+        
+OutCom  AND R0, R0, #0
+        ADD R0, R3, R0
+        OUT            ; Print Character in R0
 
 
 Done    HALT ;End of the program
