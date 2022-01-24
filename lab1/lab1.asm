@@ -30,3 +30,4 @@ OutCom  AND R0, R0, #0 ; initialize and clear R0
         BR Loop2
 
 Done    HALT ;End of the program
+.END
