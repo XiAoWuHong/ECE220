@@ -17,8 +17,8 @@ BitEnd  ADD R3, R3, #9
         BR OutCom
 ZeroAdd ADD R3, R3, #9
         
-OutCom  AND R0, R0, #0
-        ADD R0, R3, R0
+OutCom  AND R0, R0, #0 ; initialize and clear R0
+        ADD R0, R3, R0 ; Put character in R3 into R0
         OUT            ; Print Character in R0
 
 
