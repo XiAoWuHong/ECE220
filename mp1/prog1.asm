@@ -99,7 +99,34 @@ GET_NEXT
 PRINT_HIST
 
 ; you will need to insert your code to print the histogram here
+        AND R6, R6, #0 ;initializing digit counter
+        ADD R6, R6, #4 ;make digit counter equal to 4
+        AND R4, R4, #0 ;initializing digit register
+Loop2   ADD R6, R6, #0 ;Setcc
+        BRz DONE
+        AND R2, R2, #0
+        ADD R2, R2, #4 ;initialize bit counter to 4
+LoopIn  BRz BitEnd
 
+        ADD R3, R3, R3
+        BRzp False
+        ADD R4, R4, #1
+False   ADD R4, R4, R4
+        ADD R2, R2, #-2
+        BR LoopIn
+
+BitEnd  ADD R3, R3, #9
+        BRnz ZeroAdd
+        ADD R3, R3, #9
+        ADD R3, R3, #-10
+        BR OutCom
+ZeroAdd ADD R3, R3, #9
+        
+OutCom  AND R0, R0, #0 ; initialize and clear R0
+        ADD R0, R3, R0 ; Put character in R3 into R0
+        OUT            ; Print Character in R0
+        ADD R6, R6, #-1
+        BR Loop2
 ; do not forget to write a brief description of the approach/algorithm
 ; for your implementation, list registers used in this part of the code,
 ; and provide sufficient comments

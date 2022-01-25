@@ -4,7 +4,7 @@
         ADD R6, R6, #4 ;make digit counter equal to 4
         AND R4, R4, #0 ;initializing digit register
 Loop2   ADD R6, R6, #0 ;Setcc
-        BRz Done
+        BRz DONE
         AND R2, R2, #0
         ADD R2, R2, #4 ;initialize bit counter to 4
 LoopIn  BRz BitEnd
@@ -29,5 +29,5 @@ OutCom  AND R0, R0, #0 ; initialize and clear R0
         ADD R6, R6, #-1
         BR Loop2
 
-Done    HALT ;End of the program
+DONE    HALT ;End of the program
 .END
