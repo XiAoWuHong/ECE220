@@ -29,12 +29,12 @@ R0=x0000 R1=x7FFF R2=x0000 R3=x0000 R4=x0000 R5=x0000 R6=x0000 R7=x0490
                    x0494 x0FF9 BRNZP TRAP_HALT
 Loaded "grade/test1.obj" and set PC to x4000
 Loaded "prog1.obj" and set PC to x3000
-Zzú
+À
 
 --- halting the LC-3 ---
 
 PC=x0494 IR=xB1AE PSR=x0400 (ZERO)
-R0=x0000 R1=x7FFF R2=x0000 R3=xC5FA R4=x01FE R5=xFFE0 R6=x0000 R7=x0490 
+R0=x0000 R1=x7FFF R2=x0000 R3=xFFC0 R4=xFFE6 R5=xFFE0 R6=x0050 R7=x0490 
                    x0494 x0FF9 BRNZP TRAP_HALT
 
 Failed nightly test.
@@ -42,4 +42,4 @@ This nightly test is focusing on compilation error not functionality test.
 This nightly report only tests on the released testcases.
 There are many hidden edge testcase for the MP. Please test it yourselve.
 HIGHLY RECOMMEND YOU TO START YOUR MP EARLY!!!!!!!
-Timestamp: 2022-01-26_00:35:46
+Timestamp: 2022-01-27_00:36:49
