@@ -100,12 +100,16 @@ PRINT_HIST
 
 ; you will need to insert your code to print the histogram here
 
-	AND R0, R0, #0
-	ADD R0, R0, #16
-	ADD R0, R0, #16
-	ADD R0, R0, #16
-	ADD R0, R0, #16
+	AND R1, R1, #0
+	AND R2, R2, #0
+	ADD R2, R2, #16
+	ADD R2, R2, #11
+	LD R0, HIST_ADDR
+LoopLoop
 	OUT
+	ADD R0, R0, #1
+	ADD R2, R2, #-1
+	BRp LoopLoop
 	
 
 ; do not forget to write a brief description of the approach/algorithm
