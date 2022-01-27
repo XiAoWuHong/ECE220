@@ -101,8 +101,12 @@ PRINT_HIST
 ; you will need to insert your code to print the histogram here
 
 	AND R0, R0, #0
-	ADD R0, R0, x64
+	ADD R0, R0, #16
+	ADD R0, R0, #16
+	ADD R0, R0, #16
+	ADD R0, R0, #16
 	OUT
+	
 
 ; do not forget to write a brief description of the approach/algorithm
 ; for your implementation, list registers used in this part of the code,
