@@ -100,9 +100,16 @@ PRINT_HIST
 
 ; you will need to insert your code to print the histogram here
 
+; R0 is used to print and hold values temporarily 
+; R1 holds the address for the histogram data
+; R2 holds the ASCII character
+; R3 holds the data held in the address of the histogram data
+; R4 is the loop counter
+; R5 is the digit counter
+; R6 is the bit counter 
+
 	AND R1, R1, #0		; clear R1
 	AND R2, R2, #0		; clear R2
-	AND R3, R3, #0		; clear R3
 	LD R4, NUM_BINS		; Set loop counter
 	LD R2, ASCIIStart	; ASCII @
 	LEA R1, HIST_ADDR	; address of histogram data
@@ -110,9 +117,49 @@ LoopLoop
 	AND R0, R0, #0		; clear R0
 	ADD R0, R0, R2		; put ASCII value
 	OUT					; print R0
+	LD R0, ASCII_SP		; load space character into R0
+	OUT					; print space
 	ADD R2, R2, #1		; increment ASCII value
 
-	
+; stuff from lab1
+	AND R5, R5, #0		; initialize digit counter
+	ADD R5, R5, #4
+	LDR R3, R1, #0		; put data at histogram address into R3
+UghLoop
+	AND R0, R0, #0		; clear R0 for reuse
+	AND R6, R6, #0		; initialize bit counter
+	ADD R6, R6, #4		; set bit counter to 4
+PPloop
+	ADD R3, R3, #0		; setcc
+	BRzp NoOne
+	ADD R0, R0, #1		; add one to the LSB of digit
+NoOne
+	ADD R0, R0, R0		; left shift digit
+	ADD R3, R3, R3		; left shift R3 (data from histogram)
+	ADD R6, R6, #-1		; decrement bit counter
+	BRp PPloop			; does R6 (bit counter) equal zero? If not then go back up to PPloop
+
+	AND R6, R6, #0		; clear R6 for reuse
+	ADD R6, R6, #-9		; since R6 has become 0, add 9 for the next BR statement 
+	ADD R0, R0, R6		; subtract 9 from R0 
+	BRnz Awooga			; is R0 less than or equal to 9?
+	NOT R0, R0
+	ADD R0, R0, #1		; Creates the 2s comp of R0
+	LD R6, ASCII_A		; Loads ASCII_A into R6 hex printing prep
+	ADD R6, R6, R0		; finds which ASCII value to print
+	AND R0, R0, #0
+	ADD R0, R6, #0		; Puts the correct ASCII value into R0
+	BR OutCom			; Goes to the OUT command
+Awooga
+	LD R6, ASCII_9		; Loads ASCII_9 into R6 for hex printing prep
+	ADD R6, R6, R0		; Finds the correct ASCII value
+	AND R0, R0, #0		
+	ADD R0, R6, #0		; Puts the correct ASCII value into R0
+OutCom
+	OUT
+	ADD R3, R3, R3
+	ADD R5, R5, #-1		; decrement digit counter
+	BRp UghLoop
 
 	LD R0, NewLine		; Load NewLine value into R0
 	OUT
@@ -133,13 +180,16 @@ DONE	HALT			; done
 ; my constants
 ASCIIStart	.FILL x40
 NewLine		.FILL xA
+ASCII_A		.FILL x41
+ASCII_9		.FILL x39
+ASCII_SP	.FILL x20
 
 ; the data needed by the program
 NUM_BINS	.FILL #27	; 27 loop iterations
 NEG_AT		.FILL xFFC0	; the additive inverse of ASCII '@'
 AT_MIN_Z	.FILL xFFE6	; the difference between ASCII '@' and 'Z'
 AT_MIN_BQ	.FILL xFFE0	; the difference between ASCII '@' and '`'
-HIST_ADDR	.FILL x3F00     ; histogram starting address
+HIST_ADDR	.FILL x3F00 ; histogram starting address
 STR_START	.FILL x4000	; string starting address
 
 ; for testing, you can use the lines below to include the string in this
