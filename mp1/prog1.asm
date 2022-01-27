@@ -107,7 +107,7 @@ PRINT_HIST
 LoopLoop
 	ADD R0, R6, R0
 	OUT
-	ADD R1, R1, #1
+	ADD R1, R1, #-1
 	BRz DONE
 	ADD R6, R6, #1
 	BR LoopLoop
