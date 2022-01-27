@@ -27,6 +27,8 @@ OutCom  AND R0, R0, #0 ; initialize and clear R0
         ADD R0, R3, R0 ; Put character in R3 into R0
         OUT            ; Print Character in R0
         ADD R6, R6, #-1
+        AND R0, R0, #0 
+        ADD R0, R0, xA 
         BR Loop2
 
 DONE    HALT ;End of the program

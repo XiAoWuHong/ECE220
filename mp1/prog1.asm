@@ -100,17 +100,9 @@ PRINT_HIST
 
 ; you will need to insert your code to print the histogram here
 
-	LD R6, HIST_ADDR	; load the address of the start of the historgram into R6
-	AND R1, R1, #0	
-	ADD R1, R1, #27
-	AND R0, R0, #0		; Clear R0
-LoopLoop
-	ADD R0, R6, R0
+	AND R0, R0, #0
+	ADD R0, R0, x64
 	OUT
-	ADD R1, R1, #-1
-	BRz DONE
-	ADD R6, R6, #1
-	BR LoopLoop
 
 ; do not forget to write a brief description of the approach/algorithm
 ; for your implementation, list registers used in this part of the code,
