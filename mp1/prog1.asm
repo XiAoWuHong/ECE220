@@ -100,16 +100,26 @@ PRINT_HIST
 
 ; you will need to insert your code to print the histogram here
 
-	AND R1, R1, #0
-	AND R2, R2, #0
-	ADD R2, R2, #16
-	ADD R2, R2, #11
-	LD R0, HIST_ADDR
+	AND R1, R1, #0		; clear R1
+	AND R2, R2, #0		; clear R2
+	AND R3, R3, #0		; clear R3
+	LD R4, NUM_BINS		; Set loop counter
+	LD R2, ASCIIStart	; ASCII @
+	LEA R1, HIST_ADDR	; address of histogram data
 LoopLoop
+	AND R0, R0, #0		; clear R0
+	ADD R0, R0, R2		; put ASCII value
+	OUT					; print R0
+	ADD R2, R2, #1		; increment ASCII value
+
+	
+
+	LD R0, NewLine		; Load NewLine value into R0
 	OUT
-	ADD R0, R0, #1
-	ADD R2, R2, #-1
+	ADD R4, R4, #-1		; decrement loop counter
 	BRp LoopLoop
+
+
 	
 
 ; do not forget to write a brief description of the approach/algorithm
@@ -120,6 +130,9 @@ LoopLoop
 
 DONE	HALT			; done
 
+; my constants
+ASCIIStart	.FILL x40
+NewLine		.FILL xA
 
 ; the data needed by the program
 NUM_BINS	.FILL #27	; 27 loop iterations
