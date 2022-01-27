@@ -100,16 +100,15 @@ PRINT_HIST
 
 ; you will need to insert your code to print the histogram here
 
-	LD R6, HIST_ADDR
-	LD R5, #64
-	LD R4, #-90
-	AND R0, R0, #0
+	LD R6, HIST_ADDR	; load the address of the start of the historgram into R6
+	LD R5, #64 			; load the ascii value for @ into R5
+	LD R4, #-90			; load the inverse ascii value for Z into R4
+	AND R0, R0, #0		; Clear R0
 LoopLoop
 	ADD R0, R5, R0
-	OUT
 	LDR R0, R6, #0
 	OUT
-	ADD R4, R4, R5
+	ADD R3, R4, R5
 	BRz DONE
 	ADD R5, R5, #1
 	ADD R6, R6, #1
