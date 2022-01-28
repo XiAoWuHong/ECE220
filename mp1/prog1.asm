@@ -123,7 +123,7 @@ LoopLoop
 
 ; stuff from lab1
 	AND R5, R5, #0		; initialize digit counter
-	ADD R5, R5, #4
+	ADD R5, R5, #4 
 	LDR R3, R1, #0		; put data at histogram address into R3
 UghLoop
 	AND R0, R0, #0		; clear R0 for reuse
@@ -139,26 +139,22 @@ UghLoop
 	ADD R6, R6, #-1		; decrement bit counter
 	BRp PPloop			; does R6 (bit counter) equal zero? If not then go back up to PPloop
 
-	AND R6, R6, #0		; clear R6 for reuse
-	ADD R6, R6, #-9		; since R6 has become 0, add 9 for the next BR statement 
-	ADD R6, R0, R6		; subtract 9 from R0 
 
-	BRnz Awooga			; is R0 less than or equal to 9?
+	ADD R0, R0, #-10
 	AND R6, R6, #0
 	ADD R6, R0, #0
+	BRzp let
+	BR Num 
+let
 	LD R0, ASCII_A
-	ADD R0, R0, R6
-
-	BR OutCom			; Goes to the OUT command
-	Awooga
-	AND R6, R6, #0
-	ADD R6, R0, #0
+	BR QuickSkip
+Num
 	LD R0, ASCII_0
+	ADD R6, R6, #10
+	QuickSkip
 	ADD R0, R0, R6
-OutCom
-	OUT
-	ADD R3, R3, R3
-	ADD R5, R5, #-1		; decrement digit counter
+	OUT	
+	ADD R5, R5, #-1
 	BRp UghLoop
 
 	LD R0, NewLine		; Load NewLine value into R0
@@ -173,6 +169,7 @@ OutCom
 ; do not forget to write a brief description of the approach/algorithm
 ; for your implementation, list registers used in this part of the code,
 ; and provide sufficient comments
+
 
 
 
@@ -204,3 +201,4 @@ STR_START	.FILL x4000	; string starting address
 	; (so do not write any code below it!)
 
 	.END
+
