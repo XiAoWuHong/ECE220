@@ -139,29 +139,29 @@ UghLoop
 	ADD R6, R6, #-1		; decrement bit counter
 	BRp PPloop			; does R6 (bit counter) equal zero? If not then go back up to PPloop
 
-
+;lab1
 	ADD R0, R0, #-10
 	AND R6, R6, #0
 	ADD R6, R0, #0
 	BRzp let
 	BR Num 
-let
+	let
 	LD R0, ASCII_A
 	BR QuickSkip
-Num
+	Num
 	LD R0, ASCII_0
 	ADD R6, R6, #10
 	QuickSkip
-	ADD R0, R0, R6
+	ADD R0, R0, R6	
 	OUT	
-	ADD R5, R5, #-1
+	ADD R5, R5, #-1		; decrement digit counter
 	BRp UghLoop
 
 	LD R0, NewLine		; Load NewLine value into R0
 	OUT
-	ADD R1, R1, #1
+	ADD R1, R1, #1		; incrementing HIST_ADDR
 	ADD R4, R4, #-1		; decrement loop counter
-	BRp LoopLoop
+	BRp LoopLoop		; loop the whole code for the next letter
 
 
 
