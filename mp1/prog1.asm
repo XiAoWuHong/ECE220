@@ -112,7 +112,7 @@ PRINT_HIST
 	AND R2, R2, #0		; clear R2
 	LD R4, NUM_BINS		; Set loop counter
 	LD R2, ASCIIStart	; ASCII @
-	LEA R1, HIST_ADDR	; address of histogram data
+	LD R1, HIST_ADDR	; address of histogram data
 LoopLoop
 	AND R0, R0, #0		; clear R0
 	ADD R0, R0, R2		; put ASCII value
@@ -129,32 +129,32 @@ UghLoop
 	AND R0, R0, #0		; clear R0 for reuse
 	AND R6, R6, #0		; initialize bit counter
 	ADD R6, R6, #4		; set bit counter to 4
-PPloop
+	PPloop
+	ADD R0, R0, R0		; left shift digit
 	ADD R3, R3, #0		; setcc
 	BRzp NoOne
 	ADD R0, R0, #1		; add one to the LSB of digit
-NoOne
-	ADD R0, R0, R0		; left shift digit
+	NoOne
 	ADD R3, R3, R3		; left shift R3 (data from histogram)
 	ADD R6, R6, #-1		; decrement bit counter
 	BRp PPloop			; does R6 (bit counter) equal zero? If not then go back up to PPloop
 
 	AND R6, R6, #0		; clear R6 for reuse
 	ADD R6, R6, #-9		; since R6 has become 0, add 9 for the next BR statement 
-	ADD R0, R0, R6		; subtract 9 from R0 
+	ADD R6, R0, R6		; subtract 9 from R0 
+
 	BRnz Awooga			; is R0 less than or equal to 9?
-	NOT R0, R0
-	ADD R0, R0, #1		; Creates the 2s comp of R0
-	LD R6, ASCII_A		; Loads ASCII_A into R6 hex printing prep
-	ADD R6, R6, R0		; finds which ASCII value to print
-	AND R0, R0, #0
-	ADD R0, R6, #0		; Puts the correct ASCII value into R0
+	AND R6, R6, #0
+	ADD R6, R0, #0
+	LD R0, ASCII_A
+	ADD R0, R0, R6
+
 	BR OutCom			; Goes to the OUT command
-Awooga
-	LD R6, ASCII_9		; Loads ASCII_9 into R6 for hex printing prep
-	ADD R6, R6, R0		; Finds the correct ASCII value
-	AND R0, R0, #0		
-	ADD R0, R6, #0		; Puts the correct ASCII value into R0
+	Awooga
+	AND R6, R6, #0
+	ADD R6, R0, #0
+	LD R0, ASCII_0
+	ADD R0, R0, R6
 OutCom
 	OUT
 	ADD R3, R3, R3
@@ -163,11 +163,12 @@ OutCom
 
 	LD R0, NewLine		; Load NewLine value into R0
 	OUT
+	ADD R1, R1, #1
 	ADD R4, R4, #-1		; decrement loop counter
 	BRp LoopLoop
 
 
-	
+
 
 ; do not forget to write a brief description of the approach/algorithm
 ; for your implementation, list registers used in this part of the code,
@@ -181,7 +182,7 @@ DONE	HALT			; done
 ASCIIStart	.FILL x40
 NewLine		.FILL xA
 ASCII_A		.FILL x41
-ASCII_9		.FILL x39
+ASCII_0		.FILL x30
 ASCII_SP	.FILL x20
 
 ; the data needed by the program
