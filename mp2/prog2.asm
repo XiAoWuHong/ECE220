@@ -30,20 +30,20 @@ EVALUATE
 ;your code goes here
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; addition
 ;input R3, R4
 ;out R0
 PLUS	
 	;your code goes here
 	ADD R0, R3, R4	; adding R3 to R4 and putting the result into R0
 	RET
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; subtraction
 ;input R3, R4
 ;out R0
 MIN
 ;your code goes here
 	
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; multiplication 
 ;input R3, R4
 ;out R0
 MUL	
@@ -60,14 +60,14 @@ MUL
 	RET
 ;your code goes here
 	
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; division
 ;input R3, R4
 ;out R0
 DIV	
 ;your code goes here
 	
 	
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; exponents
 ;input R3, R4
 ;out R0
 EXP
