@@ -34,18 +34,30 @@ EVALUATE
 ;input R3, R4
 ;out R0
 PLUS	
-;your code goes here
-	
+	;your code goes here
+	ADD R0, R3, R4	; adding R3 to R4 and putting the result into R0
+	RET
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;input R3, R4
 ;out R0
-MIN	
+MIN
 ;your code goes here
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;input R3, R4
 ;out R0
 MUL	
+	AND R1, R1, #0	; initialize and clear R1
+	ADD R1, R4, #0	; put R4 into R1
+	ADD R3, R3, #0	; check if R3 is zero
+	BRz Zero 
+	ADD R1, R4, R1	; add R4 to R1 once
+	ADD R3, R3, #-1	; decrement R3
+	BRz BACK
+	Zero 
+	AND R0, R0, #0
+	BACK
+	RET
 ;your code goes here
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
