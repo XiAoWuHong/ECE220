@@ -12,6 +12,7 @@ SubOp			.FILL x2D	; -
 MulOp			.FILL x2A	; *
 DivOp			.FILL x2F	; /
 ExpOp			.FILL x5E	; ^
+Equal			.FILL x3D	; =
 SPACE			.FILL x20	; " "
 ASCII9			.FILL x39	; 9
 ASCII0			.FILL x30	; 0
@@ -27,23 +28,89 @@ PRINT_HEX ;taken from MP1
 ;
 ;
 EVALUATE
+	GETC	; get character from keyboard
+	OUT		; echo character to monitor
+	Finding
+		LD R1, Equal
+		NOT R1, R1
+		ADD R1, R1, #1	; find the 2s comp additive inverse of "="
+		AND R2, R2, #0
+		ADD R2, R1, R0	; is the inputed character "="?
+		BRz SuperDuperFinish
 
-	Operandands 
+		LD R1, SPACE
+		NOT R1, R1
+		ADD R1, R1, #1	; find the 2s comp additive inverse of " "
+		ADD R2, R1, R0	; is the inputed character " "?
+		BRz EVALUATE
 
-	Operators
-	
-		Addition
-			JSR PLUS
-		Subtraction
-			JSR MIN
-		Multiplication 
-			JSR MUL
-		Divide
-			JSR DIV
-		Exponent 
-			JSR EXP
+		LD R1, ASCII0
+		NOT R1, R1
+		ADD R1, R1, #1	; 2s comp of ASCII0
+		AND R2, R2, #0
+		ADD R2, R1, R0	; is the inputed character below 0 on the ASCII table?
+		BRn NotNum
 
 
+		Operandands 
+
+		Operators
+
+			LD R1, AddOp
+			NOT R1, R1
+			ADD R1, R1, #1	; 2s comp of "+"
+			ADD R2, R1, R0	; is the inputed character "+"?
+			BRz Addition
+
+			LD R1, SubOp
+			NOT R1, R1
+			ADD R1, R1, #1	; 2s comp of "-"
+			ADD R2, R1, R0	; is the inputed character "-"?
+			BRz Subtraction
+
+			LD R1, MulOp
+			NOT R1, R1
+			ADD R1, R1, #1	; 2s comp of "*"
+			ADD R2, R1, R0	; is the inputed character "*"
+			BRz Multiplication
+
+			LD R1, DivOp
+			NOT R1, R1
+			ADD R1, R1, #1	; 2s comp of "/"
+			ADD R2, R1, R0	; is the inputed character "/"?
+			BRz Divide
+
+			LD R1, ExpOp
+			NOT R1, R1
+			ADD R1, R1, #1
+			ADD R2, R1, R0
+			BRz Exponent
+		
+	LD R0, INVALID
+		PUTS
+		BR SuperDuperFinish
+
+	Addition
+
+		JSR PLUS
+
+	Subtraction
+		JSR MIN
+
+	Multiplication 
+		JSR MUL
+
+	Divide
+		JSR DIV
+
+	Exponent 
+		JSR EXP
+
+
+
+; finish it
+SuperDuperFinish
+	HALT
 ;your code goes here
 
 
@@ -79,6 +146,7 @@ MUL
 	ADD R1, R4, #0	; put R4 into R1
 	ADD R3, R3, #0	; check if R3 is zero
 	BRz Zero 
+	MultiRep
 	ADD R1, R4, R1	; add R4 to R1 once
 	ADD R3, R3, #-1	; decrement R3
 	BRz MultiFin	; check if multiplication is done 
