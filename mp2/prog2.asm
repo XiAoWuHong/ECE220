@@ -49,12 +49,24 @@ EVALUATE
 		ADD R1, R1, #1	; 2s comp of ASCII0
 		AND R2, R2, #0
 		ADD R2, R1, R0	; is the inputed character below 0 on the ASCII table?
-		BRn NotNum
+		BRn CheckOperators
 
+		LD R1, ASCII9
+		NOT R1, R1
+		ADD R1, R1, #1	; 2s comp of ASCII9
+		AND R2, R2, #0	
+		ADD R2, R1, R0	; is the inputed character above 9 on the ASCII table?
+		BRp CheckOperators
 
-		Operandands 
+		FindOperandand
+		LD R1, ASCII0
+		NOT R1, R1
+		ADD R1, R1, #1
+		ADD R0, R0, R1
+		JSR PUSH
+		JSR EVALUATE
 
-		Operators
+		CheckOperators
 
 			LD R1, AddOp
 			NOT R1, R1
@@ -85,15 +97,12 @@ EVALUATE
 			ADD R1, R1, #1
 			ADD R2, R1, R0
 			BRz Exponent
-		
-	LD R0, INVALID
-		PUTS
-		BR SuperDuperFinish
+			BR UhOh
 
 	Addition
-
+		ST 
 		JSR PLUS
-
+		
 	Subtraction
 		JSR MIN
 
@@ -109,7 +118,11 @@ EVALUATE
 
 
 ; finish it
+UhOh	
+	LD R0, INVALID
+	PUTS
 SuperDuperFinish
+	JSR PRINT_HEX
 	HALT
 ;your code goes here
 
@@ -117,7 +130,7 @@ SuperDuperFinish
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; addition
 ;input R3, R4
 ;out R0
-PLUS	
+PLUS
 	;your code goes here
 	ADD R0, R3, R4	; adding R3 to R4 and putting the result into R0
 	ST R7, EVAL_SAVE_R7	; saving R7 for nested subroutine use
