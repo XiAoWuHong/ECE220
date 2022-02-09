@@ -5,7 +5,7 @@
 	
 ;your code goes here
 
-EVAL_SAVE_R7 .BLKW #1
+EVAL_SAVE_R7 .BLKW #1 ; used to save R7 when nested subroutines are being used
 
 
 
@@ -15,7 +15,7 @@ EVAL_SAVE_R7 .BLKW #1
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;R3- value to print in hexadecimal
-PRINT_HEX
+PRINT_HEX ;taken from MP1
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;R0 - character input from keyboard
@@ -45,20 +45,20 @@ EVALUATE
 PLUS	
 	;your code goes here
 	ADD R0, R3, R4	; adding R3 to R4 and putting the result into R0
-	ST R7, EVAL_SAVE_R7
+	ST R7, EVAL_SAVE_R7	; saving R7 for nested subroutine use
 	JSR PUSH
-	LD R7, EVAL_SAVE_R7
+	LD R7, EVAL_SAVE_R7	; reloading R7 to go back to evaluate
 	RET
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; subtraction
 ;input R3, R4
 ;out R0
 MIN
 	NOT R4, R4
-	ADD R4, R4, #1
-	ADD R0, R3, R4
-	ST R7, EVAL_SAVE_R7
+	ADD R4, R4, #1	;2s comp of R4
+	ADD R0, R3, R4	; subtracting R4 from R3
+	ST R7, EVAL_SAVE_R7	; saving R7 so we can go into a nested subroutine
 	JSR PUSH
-	LD R7, EVAL_SAVE_R7
+	LD R7, EVAL_SAVE_R7	; reload R7 to go back to evaluate
 ;your code goes here
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; multiplication 
@@ -71,13 +71,18 @@ MUL
 	BRz Zero 
 	ADD R1, R4, R1	; add R4 to R1 once
 	ADD R3, R3, #-1	; decrement R3
-	BRz BACK
+	BRz MultiFin	; check if multiplication is done 
+	BR MultiRep	
 	Zero 
-	AND R0, R0, #0
+	AND R0, R0, #0	; if R3 is zero
+	BR BACK
+	MultiFin
+	AND R0, R0, #0	; clear R0
+	ADD R0, R1, R0	; put value of R1 into R0
 	BACK
-	ST R7, EVAL_SAVE_R7
+	ST R7, EVAL_SAVE_R7	; save R7 so we can go to nested subroutine
 	JSR PUSH
-	LD R7, EVAL_SAVE_R7
+	LD R7, EVAL_SAVE_R7	; reload R7 so we can go back to evaluate
 	RET
 ;your code goes here
 
@@ -85,6 +90,19 @@ MUL
 ;input R3, R4
 ;out R0
 DIV	
+	AND R0, R0, #0	; clear R0
+	NOT R4, R4
+	ADD R4, R4, #1	; get the 2s comp of R4
+	DivRep
+	ADD R3, R4, R3	; subtracting R4 from R3
+	BRn DivDone 	; if there is a remainder or the division has completed then back to eval
+	ADD R0, R0, #1	; if R4 goes into R3 add 1 to R0
+	BRnzp DivRep
+	DivDone			; repeat subtration process to continue dividing
+	ST R7, EVAL_SAVE_R7	; save R7 to go to nested subroutine
+	JSR PUSH
+	LD R7, EVAL_SAVE_R7	; reload the R7 value that would take you back to eval
+	RET
 ;your code goes here
 	
 	
@@ -92,8 +110,17 @@ DIV
 ;input R3, R4
 ;out R0
 EXP
+	AND R1, R1, #1
+	ADD R1, R1, R3	; copy R3 into R1 so we can use R1 as a counter for the multplication loop
+	ADD R4, R4, #0	; check if R4 is 0 for the ZeroCase 
+	BRz ZeroCase
+	AND R2, R2, #0	; clear R2	
+	ADD R2, R3, R2	; copy current value of R3 into R2 for multiplication
+
 ;your code goes here
 	
+
+
 ;IN:R0, OUT:R5 (0-success, 1-fail/overflow)
 ;R3: STACK_END R4: STACK_TOP
 ;
