@@ -4,11 +4,8 @@
 .ORIG x3000
 	
 ;your code goes here
-	
 
-
-
-
+EVAL_SAVE_R7 .BLKW #1
 
 
 
@@ -27,6 +24,18 @@ PRINT_HEX
 ;
 EVALUATE
 
+	Addition
+		JSR PLUS
+	Subtraction
+		JSR MIN
+	Multiplication 
+		JSR MUL
+	Divide
+		JSR DIV
+	Exponent 
+		JSR EXP
+
+
 ;your code goes here
 
 
@@ -36,11 +45,20 @@ EVALUATE
 PLUS	
 	;your code goes here
 	ADD R0, R3, R4	; adding R3 to R4 and putting the result into R0
+	ST R7, EVAL_SAVE_R7
+	JSR PUSH
+	LD R7, EVAL_SAVE_R7
 	RET
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; subtraction
 ;input R3, R4
 ;out R0
 MIN
+	NOT R4, R4
+	ADD R4, R4, #1
+	ADD R0, R3, R4
+	ST R7, EVAL_SAVE_R7
+	JSR PUSH
+	LD R7, EVAL_SAVE_R7
 ;your code goes here
 	
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; multiplication 
@@ -57,9 +75,12 @@ MUL
 	Zero 
 	AND R0, R0, #0
 	BACK
+	ST R7, EVAL_SAVE_R7
+	JSR PUSH
+	LD R7, EVAL_SAVE_R7
 	RET
 ;your code goes here
-	
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; division
 ;input R3, R4
 ;out R0
@@ -81,7 +102,7 @@ PUSH
 	ST R4, PUSH_SaveR4	;save R4
 	AND R5, R5, #0		;
 	LD R3, STACK_END	;
-	LD R4, STACk_TOP	;
+	LD R4, STACK_TOP	;
 	ADD R3, R3, #-1		;
 	NOT R3, R3		;
 	ADD R3, R3, #1		;
