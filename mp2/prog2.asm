@@ -6,6 +6,7 @@
 ;your code goes here
 
 EVAL_SAVE_R7	.BLKW #1	; used to save R7 when nested subroutines are being used
+SAVE_R5		.BLKW #1	; used to save R5 cuz I love it
 INVALID			.STRINGZ "INVALID EXPRESSION"
 AddOp			.FILL x2B	; +
 SubOp			.FILL x2D	; -
@@ -16,13 +17,52 @@ Equal			.FILL x3D	; =
 SPACE			.FILL x20	; " "
 ASCII9			.FILL x39	; 9
 ASCII0			.FILL x30	; 0
-ASCII_A		.FILL x41
+ASCIIA		.FILL x41
 
 JSR EVALUATE
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;R3- value to print in hexadecimal
 PRINT_HEX ;taken from MP1
+ST R7, EVAL_SAVE_R7
+ST R5, SAVE_R5
+; stuff from lab1
+	AND R5, R5, #0		; initialize digit counter
+	ADD R5, R5, #4 
+	ADD R3, R0, #0		; put data at histogram address into R3
 
+UghLoop
+	AND R0, R0, #0		; clear R0 for reuse
+	AND R6, R6, #0		; initialize bit counter
+	ADD R6, R6, #4		; set bit counter to 4
+	PPloop
+	ADD R0, R0, R0		; left shift digit
+	ADD R3, R3, #0		; setcc
+	BRzp NoOne
+	ADD R0, R0, #1		; add one to the LSB of digit
+	NoOne
+	ADD R3, R3, R3		; left shift R3 (data from histogram)
+	ADD R6, R6, #-1		; decrement bit counter
+	BRp PPloop			; does R6 (bit counter) equal zero? If not then go back up to PPloop
+
+;lab1
+	ADD R0, R0, #-10
+	AND R6, R6, #0
+	ADD R6, R0, #0
+	BRzp let
+	BR Num 
+	let
+	LD R0, ASCIIA
+	BR QuickSkip2
+	Num
+	LD R0, ASCII0
+	ADD R6, R6, #10
+	QuickSkip2
+	ADD R0, R0, R6	
+	OUT	
+	ADD R5, R5, #-1		; decrement digit counter
+	BRp UghLoop
+LD R5, SAVE_R5
+LD R7, EVAL_SAVE_R7	; reloading R7 to go back to evaluate
 RET
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;R0 - character input from keyboard
@@ -169,7 +209,10 @@ UhOh
 	BR SuperDuperFinish
 SuperFinish
 	JSR POP
-	OUT
+	JSR POP
+	ADD R5, R5, #0
+	BRz UhOh
+	ADD R5, R0, #0
 	JSR PRINT_HEX
 	SuperDuperFinish
 	HALT
@@ -250,24 +293,24 @@ DIV
 ;input R3, R4
 ;out R0
 EXP
-	AND R1, R1, #1
-	ADD R1, R1, R3	; copy R3 into R1 so we can use R1 as a counter for the multplication loop
-	AND R5, R5, #0
-	ADD R5, R5, R1	; store the value of the counter for the multiplication loop in R5
+	ADD R1, R3, #0	; copy R3 into R1 so we can use R1 as a counter for the multplication loop
+	ADD R5, R1, #0	; store the value of the counter for the multiplication loop in R5
 	ADD R4, R4, #0	; check if R4 is 0 for the ZeroCase 
 	BRz ZeroCase
+	ADD R4, R4, #-1	; power becomes n-1
 	BR QuickSkip
 	PowerLoop
 	AND R1, R1, #0	; clear multiplication counter
 	ADD R1, R5, R1	; reload multiplication counter
 		QuickSkip
-		AND R2, R2, #0	; clear R2	
-		ADD R2, R3, R2	; copy current value of R3 into R2 for the power loop
-			MultiLoopEXP
+		ADD R2, R3, #0	; copy current value of R3 into R2 for the power loop [R2 <- R3 (subtotal)]
+		AND R3, R3, #0	; clear R3 
+			MultiLoopEXP	; R3 <- R2 * R1
 			ADD R3, R2, R3	; add value of R3 to itself via R2
 			ADD R1, R1, #-1	; decrement multiplication counter
 			BRp MultiLoopEXP
-			ADD R4, R4, #-1
+				ADD R0, R3, #0	; put R3 into R0 to store current resultant
+			ADD R4, R4, #-1	; decrement powerloop
 			BRz BackExp
 			BR PowerLoop
 
