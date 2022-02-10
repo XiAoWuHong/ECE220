@@ -16,12 +16,14 @@ Equal			.FILL x3D	; =
 SPACE			.FILL x20	; " "
 ASCII9			.FILL x39	; 9
 ASCII0			.FILL x30	; 0
+ASCII_A		.FILL x41
 
-
+JSR EVALUATE
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;R3- value to print in hexadecimal
 PRINT_HEX ;taken from MP1
 
+RET
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;R0 - character input from keyboard
 ;R6 - current numerical output
@@ -36,7 +38,7 @@ EVALUATE
 		ADD R1, R1, #1	; find the 2s comp additive inverse of "="
 		AND R2, R2, #0
 		ADD R2, R1, R0	; is the inputed character "="?
-		BRz SuperDuperFinish
+		BRz SuperFinish
 
 		LD R1, SPACE
 		NOT R1, R1
@@ -58,13 +60,13 @@ EVALUATE
 		ADD R2, R1, R0	; is the inputed character above 9 on the ASCII table?
 		BRp CheckOperators
 
-		FindOperandand
+		FindOperand
 		LD R1, ASCII0
 		NOT R1, R1
 		ADD R1, R1, #1
 		ADD R0, R0, R1
 		JSR PUSH
-		JSR EVALUATE
+		BR EVALUATE
 
 		CheckOperators
 
@@ -94,35 +96,82 @@ EVALUATE
 
 			LD R1, ExpOp
 			NOT R1, R1
-			ADD R1, R1, #1
-			ADD R2, R1, R0
+			ADD R1, R1, #1	; 2s comp of "^"
+			ADD R2, R1, R0	; is the inputed character "^"?
 			BRz Exponent
 			BR UhOh
 
 	Addition
-		ST 
-		JSR PLUS
-		
+		JSR POP				; get value for R4
+		AND R4, R4, #0
+		ADD R4, R0, #0
+		JSR POP				; get value for R3
+		AND R3, R3, #0
+		ADD R3, R0, #0
+		ADD R5, R5, #0
+		BRp UhOh
+		JSR PLUS			; execute PLUS subroutine
+		BR EVALUATE			;back to evaluate
+
 	Subtraction
+		JSR POP				; get value for R4
+		AND R4, R4, #0
+		ADD R4, R0, #0
+		JSR POP				; get value for R3
+		AND R3, R3, #0
+		ADD R3, R0, #0
+		ADD R5, R5, #0
+		BRp UhOh
 		JSR MIN
+		BR EVALUATE
 
 	Multiplication 
+		JSR POP				; get value for R4
+		AND R4, R4, #0
+		ADD R4, R0, #0
+		JSR POP				; get value for R3
+		AND R3, R3, #0
+		ADD R3, R0, #0
+		ADD R5, R5, #0
+		BRp UhOh
 		JSR MUL
+		BR EVALUATE
 
 	Divide
+		JSR POP				; get value for R4
+		AND R4, R4, #0
+		ADD R4, R0, #0
+		JSR POP				; get value for R3
+		AND R3, R3, #0
+		ADD R3, R0, #0
+		ADD R5, R5, #0
+		BRp UhOh
 		JSR DIV
+		BR EVALUATE
 
 	Exponent 
+		JSR POP				; get value for R4
+		AND R4, R4, #0
+		ADD R4, R0, #0
+		JSR POP				; get value for R3
+		AND R3, R3, #0
+		ADD R3, R0, #0
+		ADD R5, R5, #0
+		BRp UhOh
 		JSR EXP
-
+		BR EVALUATE
 
 
 ; finish it
 UhOh	
-	LD R0, INVALID
+	LEA R0, INVALID
 	PUTS
-SuperDuperFinish
+	BR SuperDuperFinish
+SuperFinish
+	JSR POP
+	OUT
 	JSR PRINT_HEX
+	SuperDuperFinish
 	HALT
 ;your code goes here
 
