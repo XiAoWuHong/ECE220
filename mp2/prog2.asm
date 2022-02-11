@@ -210,6 +210,8 @@ UhOh
 	BR SuperDuperFinish
 SuperFinish
 	JSR POP
+	ADD R5, R5, #0
+	BRp UhOh
 	JSR POP
 	ADD R5, R5, #0
 	BRz UhOh
