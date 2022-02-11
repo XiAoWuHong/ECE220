@@ -23,47 +23,47 @@ JSR EVALUATE
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;R3- value to print in hexadecimal
 PRINT_HEX ;taken from MP1
-ST R7, EVAL_SAVE_R7
-ST R5, SAVE_R5
-; stuff from lab1
-	AND R5, R5, #0		; initialize digit counter
-	ADD R5, R5, #4 
-	ADD R3, R0, #0		; put data at histogram address into R3
+	ST R7, EVAL_SAVE_R7
+	ST R5, SAVE_R5
+	; stuff from lab1
+		AND R5, R5, #0		; initialize digit counter
+		ADD R5, R5, #4 
+		ADD R3, R0, #0		; put data at histogram address into R3
 
-UghLoop
-	AND R0, R0, #0		; clear R0 for reuse
-	AND R6, R6, #0		; initialize bit counter
-	ADD R6, R6, #4		; set bit counter to 4
-	PPloop
-	ADD R0, R0, R0		; left shift digit
-	ADD R3, R3, #0		; setcc
-	BRzp NoOne
-	ADD R0, R0, #1		; add one to the LSB of digit
-	NoOne
-	ADD R3, R3, R3		; left shift R3 (data from histogram)
-	ADD R6, R6, #-1		; decrement bit counter
-	BRp PPloop			; does R6 (bit counter) equal zero? If not then go back up to PPloop
+	UghLoop
+		AND R0, R0, #0		; clear R0 for reuse
+		AND R6, R6, #0		; initialize bit counter
+		ADD R6, R6, #4		; set bit counter to 4
+		PPloop
+		ADD R0, R0, R0		; left shift digit
+		ADD R3, R3, #0		; setcc
+		BRzp NoOne
+		ADD R0, R0, #1		; add one to the LSB of digit
+		NoOne
+		ADD R3, R3, R3		; left shift R3 (data from histogram)
+		ADD R6, R6, #-1		; decrement bit counter
+		BRp PPloop			; does R6 (bit counter) equal zero? If not then go back up to PPloop
 
-;lab1
-	ADD R0, R0, #-10
-	AND R6, R6, #0
-	ADD R6, R0, #0
-	BRzp let
-	BR Num 
-	let
-	LD R0, ASCIIA
-	BR QuickSkip2
-	Num
-	LD R0, ASCII0
-	ADD R6, R6, #10
-	QuickSkip2
-	ADD R0, R0, R6	
-	OUT	
-	ADD R5, R5, #-1		; decrement digit counter
-	BRp UghLoop
-LD R5, SAVE_R5
-LD R7, EVAL_SAVE_R7	; reloading R7 to go back to evaluate
-RET
+	;lab1
+		ADD R0, R0, #-10
+		AND R6, R6, #0
+		ADD R6, R0, #0
+		BRzp let
+		BR Num 
+		let
+		LD R0, ASCIIA
+		BR QuickSkip2
+		Num
+		LD R0, ASCII0
+		ADD R6, R6, #10
+		QuickSkip2
+		ADD R0, R0, R6	
+		OUT	
+		ADD R5, R5, #-1		; decrement digit counter
+		BRp UghLoop
+	LD R5, SAVE_R5
+	LD R7, EVAL_SAVE_R7	; reloading R7 to go back to evaluate
+	RET
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;R0 - character input from keyboard
 ;R6 - current numerical output
@@ -141,65 +141,66 @@ EVALUATE
 			BRz Exponent
 			BR UhOh
 
-	Addition
-		JSR POP				; get value for R4
-		AND R4, R4, #0
-		ADD R4, R0, #0
-		JSR POP				; get value for R3
-		AND R3, R3, #0
-		ADD R3, R0, #0
-		ADD R5, R5, #0
-		BRp UhOh
-		JSR PLUS			; execute PLUS subroutine
-		BR EVALUATE			;back to evaluate
+		Operators
+			Addition
+				JSR POP				; get value for R4
+				AND R4, R4, #0
+				ADD R4, R0, #0
+				JSR POP				; get value for R3
+				AND R3, R3, #0
+				ADD R3, R0, #0
+				ADD R5, R5, #0
+				BRp UhOh
+				JSR PLUS			; execute PLUS subroutine
+				BR EVALUATE			;back to evaluate
 
-	Subtraction
-		JSR POP				; get value for R4
-		AND R4, R4, #0
-		ADD R4, R0, #0
-		JSR POP				; get value for R3
-		AND R3, R3, #0
-		ADD R3, R0, #0
-		ADD R5, R5, #0
-		BRp UhOh
-		JSR MIN
-		BR EVALUATE
+			Subtraction
+				JSR POP				; get value for R4
+				AND R4, R4, #0
+				ADD R4, R0, #0
+				JSR POP				; get value for R3
+				AND R3, R3, #0
+				ADD R3, R0, #0
+				ADD R5, R5, #0
+				BRp UhOh
+				JSR MIN
+				BR EVALUATE
 
-	Multiplication 
-		JSR POP				; get value for R4
-		AND R4, R4, #0
-		ADD R4, R0, #0
-		JSR POP				; get value for R3
-		AND R3, R3, #0
-		ADD R3, R0, #0
-		ADD R5, R5, #0
-		BRp UhOh
-		JSR MUL
-		BR EVALUATE
+			Multiplication 
+				JSR POP				; get value for R4
+				AND R4, R4, #0
+				ADD R4, R0, #0
+				JSR POP				; get value for R3
+				AND R3, R3, #0
+				ADD R3, R0, #0
+				ADD R5, R5, #0
+				BRp UhOh
+				JSR MUL
+				BR EVALUATE
 
-	Divide
-		JSR POP				; get value for R4
-		AND R4, R4, #0
-		ADD R4, R0, #0
-		JSR POP				; get value for R3
-		AND R3, R3, #0
-		ADD R3, R0, #0
-		ADD R5, R5, #0
-		BRp UhOh
-		JSR DIV
-		BR EVALUATE
+			Divide
+				JSR POP				; get value for R4
+				AND R4, R4, #0
+				ADD R4, R0, #0
+				JSR POP				; get value for R3
+				AND R3, R3, #0
+				ADD R3, R0, #0
+				ADD R5, R5, #0
+				BRp UhOh
+				JSR DIV
+				BR EVALUATE
 
-	Exponent 
-		JSR POP				; get value for R4
-		AND R4, R4, #0
-		ADD R4, R0, #0
-		JSR POP				; get value for R3
-		AND R3, R3, #0
-		ADD R3, R0, #0
-		ADD R5, R5, #0
-		BRp UhOh
-		JSR EXP
-		BR EVALUATE
+			Exponent 
+				JSR POP				; get value for R4
+				AND R4, R4, #0
+				ADD R4, R0, #0
+				JSR POP				; get value for R3
+				AND R3, R3, #0
+				ADD R3, R0, #0
+				ADD R5, R5, #0
+				BRp UhOh
+				JSR EXP
+				BR EVALUATE
 
 
 ; finish it
@@ -247,14 +248,13 @@ MIN
 ;input R3, R4
 ;out R0
 MUL	
-	AND R1, R1, #0	; initialize and clear R1
 	ADD R1, R4, #0	; put R4 into R1
 	ADD R3, R3, #0	; check if R3 is zero
 	BRz Zero 
 	MultiRep
-	ADD R1, R4, R1	; add R4 to R1 once
 	ADD R3, R3, #-1	; decrement R3
 	BRz MultiFin	; check if multiplication is done 
+	ADD R1, R4, R1	; add R4 to R1 once
 	BR MultiRep	
 	Zero 
 	AND R0, R0, #0	; if R3 is zero
