@@ -36,6 +36,7 @@ for (i = 0; i <= row; i++)
 
 //finds the denominator for the pascal's triangle equation given
   for (productloop = i; productloop > 0; productloop--)
+  
   {
     denominator = denominator * productloop; 
   }
