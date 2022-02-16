@@ -6,48 +6,30 @@
 
 int main()
 {
-  int row;          //represents n in the pascal's triangle equation
-  int i;            //represents i in the pascal's triangle equation given to us
-  unsigned long int result;  //made to store the result of the pascal's triangle equation
-  unsigned long int productloop;  
-  unsigned long int numerator;
-  unsigned long int denominator;
-
+  int row;                                   //represents n in the pascal's triangle equation
   printf("Enter a row index: ");
   scanf("%d", &row);
 
   // Write your code here
-  
+  /*
+      This code calculates a row of pascals triangle after the user inputs a row index. The loop carries out all operations. 
+  */
+
+
+  int i;                                     //represents i in the pascal's triangle equation given to us
+  long unsigned int result;                  //made to store the result of the pascal's triangle equation
+
   //this loop gets us the correct amounnt of resultants for pascals triangle
 for (i = 0; i <= row; i++)
 {
-
-
-//initializes the numerator and denominator so we don't explode during the math
-  numerator = 1;
-  denominator = 1;
-
-//finds the numerator for the pascal's triangle equation given
-  for (productloop = i; productloop > 0; productloop--) 
-  {
-    numerator = numerator * (row + 1 - productloop); //for every 
+  if (i==0){                                  //this if statement prevents a divide by zero error
+    result = 1;                               //the beginning of every pascal's triangle row is 1
   }
-
-
-//finds the denominator for the pascal's triangle equation given
-  for (productloop = i; productloop > 0; productloop--)
-
-  {
-    denominator = denominator * productloop; 
+  else{                                       //this statement does the calculation for the coefficients in pascal's triangle
+    result = (result * (row + 1 - i))/i;      //the pascal's triangle equation
   }
-
-//calculates the result using the solved for numerator and denominator
-  result = numerator/denominator;
-
-  //prints out the result
-   printf("%lu ", result);
+printf("%lu ", result);                       //prints out pascal's triangle
 }
 printf("\n");
-
   return 0;
 }
