@@ -8,10 +8,10 @@ int main()
 {
   int row;          //represents n in the pascal's triangle equation
   int i;            //represents i in the pascal's triangle equation given to us
-  unsigned result;  //made to store the result of the pascal's triangle equation
-  unsigned productloop;  
-  unsigned numerator;
-  unsigned denominator;
+  unsigned long int result;  //made to store the result of the pascal's triangle equation
+  unsigned long int productloop;  
+  unsigned long int numerator;
+  unsigned long int denominator;
 
   printf("Enter a row index: ");
   scanf("%d", &row);
@@ -36,7 +36,7 @@ for (i = 0; i <= row; i++)
 
 //finds the denominator for the pascal's triangle equation given
   for (productloop = i; productloop > 0; productloop--)
-  
+
   {
     denominator = denominator * productloop; 
   }
@@ -45,7 +45,7 @@ for (i = 0; i <= row; i++)
   result = numerator/denominator;
 
   //prints out the result
-   printf("%u ", result);
+   printf("%lu ", result);
 }
 printf("\n");
 
