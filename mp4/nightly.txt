@@ -5,16 +5,14 @@ Compilation successful
 
 Testing is_prime
 *****************
-is_prime 2 failed
-is_prime 9 failed
 Testing semiprimes program
 **************************
 Test 1 return incorrect
-Test 1 semiprimes incorrect
+Test 1 semiprimes passed
 
 Failed nightly test!!!
 This nightly test is focusing on compilation error not functionality test.
 This nightly report only tests on the released testcases.
 There are many hidden edge testcase for the MP. Please test it yourselve.
 HIGHLY RECOMMEND YOU TO START YOUR MP EARLY!!!!!!!
-Timestamp: 2022-02-24_12:22:26
+Timestamp: 2022-02-25_00:19:54
