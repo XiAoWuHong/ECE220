@@ -63,6 +63,12 @@ set_seed (const char seed_str[])
 //    Feel free to uncomment these statements, modify them, or delete these comments as necessary. 
 //    You may need to change the return statement below
    
+    int seed; 
+    char post[2];
+
+    sscanf (seed_str, "%d%1s, &seed, post");
+    void srand(unsigned int seed);
+    int rand();
     return 0;
 }
 
