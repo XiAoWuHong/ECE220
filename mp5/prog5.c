@@ -24,7 +24,7 @@
  * variables as well as the guess number.
  */
 
-static int guess_number;
+// static int guess_number;
 static int solution1;
 static int solution2;
 static int solution3;
@@ -63,13 +63,20 @@ set_seed (const char seed_str[])
 //    Feel free to uncomment these statements, modify them, or delete these comments as necessary. 
 //    You may need to change the return statement below
    
-    int seed; 
-    char post[2];
+int seed;               //seed :)
+char post[2];           //post
+int rv;
 
-    sscanf (seed_str, "%d%1s, &seed, post");
-    void srand(unsigned int seed);
-    int rand();
-    return 0;
+rv = sscanf (seed_str, "%d%1s", &seed, post);
+if (rv == 1)
+{
+srand(seed);
+return 1;
+}
+else
+{
+return 0;
+}
 }
 
 
@@ -91,8 +98,17 @@ set_seed (const char seed_str[])
 void
 start_game (int* one, int* two, int* three, int* four)
 {
-    //your code here
-    
+    // //your code here
+    *one = rand() % 8 + 1;
+    *two = rand() % 8 + 1;
+    *three = rand() % 8 + 1;
+    *four = rand() % 8 + 1; 
+
+    solution1 = *one;
+    solution2 = *two;
+    solution3 = *three;
+    solution4 = *four;
+
 }
 
 /*
@@ -119,8 +135,7 @@ start_game (int* one, int* two, int* three, int* four)
  *               (NOTE: the output format MUST MATCH EXACTLY, check the wiki writeup)
  */
 int
-make_guess (const char guess_str[], int* one, int* two, 
-	    int* three, int* four)
+make_guess (const char guess_str[], int* one, int* two, int* three, int* four)
 {
 //  One thing you will need to read four integers from the string guess_str, using a process
 //  similar to set_seed
@@ -132,7 +147,25 @@ make_guess (const char guess_str[], int* one, int* two,
 //  You should then check if the 4 integers are between 1-8. If so, it is a valid guess
 //  Otherwise, it is invalid.  
 //  Feel free to use this sscanf statement, delete these comments, and modify the return statement as needed
-    return 1;
+
+    int w, x, y, z;
+    char post[2];
+    int rv;
+
+    rv = sscanf (guess_str, "%d%d%d%d%1s", &w, &x, &y, &z, post);
+
+    if (rv != 4 || ((w || x || y || z) <= 0 ))
+    {
+        return 0;
+    }
+    else if ((rv = 4) && (w <= 8) && (x <= 8) && (y <= 8) && (z <= 8))
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
 }
 
 
