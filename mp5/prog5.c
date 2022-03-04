@@ -24,7 +24,7 @@
  * variables as well as the guess number.
  */
 
-// static int guess_number;
+static int guess_number = 1;
 static int solution1;
 static int solution2;
 static int solution3;
@@ -63,20 +63,21 @@ set_seed (const char seed_str[])
 //    Feel free to uncomment these statements, modify them, or delete these comments as necessary. 
 //    You may need to change the return statement below
    
-int seed;               //seed :)
-char post[2];           //post
-int rv;
+    int seed;               //seed :)
+    char post[2];           //post
+    int rv;                 //number of items in the string from sscanf
 
-rv = sscanf (seed_str, "%d%1s", &seed, post);
-if (rv == 1)
-{
-srand(seed);
-return 1;
-}
-else
-{
-return 0;
-}
+    rv = sscanf (seed_str, "%d%1s", &seed, post);
+    if (rv == 1)        //if there is more than one value in rv then it will return 0. Anything being in post makes the value of rv greater than 1
+    {
+        srand(seed);
+        return 1;
+    }
+    else
+    {
+        printf ("set_seed: invalid guess");     //error 
+        return 0;
+    }
 }
 
 
@@ -98,13 +99,15 @@ return 0;
 void
 start_game (int* one, int* two, int* three, int* four)
 {
-    // //your code here
+    //your code here
+    //gives us our random numbers
     *one = rand() % 8 + 1;
     *two = rand() % 8 + 1;
     *three = rand() % 8 + 1;
     *four = rand() % 8 + 1; 
 
-    solution1 = *one;
+    //this makes sure that the values we randomly generated are available in both prog5.c and main.c
+    solution1 = *one;      
     solution2 = *two;
     solution3 = *three;
     solution4 = *four;
@@ -148,22 +151,141 @@ make_guess (const char guess_str[], int* one, int* two, int* three, int* four)
 //  Otherwise, it is invalid.  
 //  Feel free to use this sscanf statement, delete these comments, and modify the return statement as needed
 
-    int w, x, y, z;
-    char post[2];
-    int rv;
+    int w, x, y, z;     //our input variables
+    char post[2];       
+    int rv;             //number of items in the string
+    rv = sscanf (guess_str, "%d%d%d%d%1s", &w, &x, &y, &z, post);  
 
-    rv = sscanf (guess_str, "%d%d%d%d%1s", &w, &x, &y, &z, post);
-
-    if (rv != 4 || ((w || x || y || z) <= 0 ))
+    if (rv != 4 || ((w || x || y || z) <= 0 ))  //if there are any items in post then return 0 and the guess is invalid
     {
+        printf ("make_guess: invalid guess \n");
         return 0;
     }
-    else if ((rv = 4) && (w <= 8) && (x <= 8) && (y <= 8) && (z <= 8))
+    else if ((rv = 4) && (w <= 8) && (x <= 8) && (y <= 8) && (z <= 8))  //if all guesses are valid and 
     {
+        int perfect = 0;        //counts the number of perfect matches
+        int misplaced = 0;      //counts the number of misplaced matches
+        //these values serve to match a solution and input
+        int a = 1;
+        int b = 2;
+        int c = 3;
+        int d = 4;
+        int solone;
+        int soltwo;
+        int solthree;
+        int solfour;
+        //variables used for pairing the guess and solution together in the case that they are a match (in any way)
+        //a is for *one or w, b is for *two or x, and so on
+
+        //this checks for perfect matches between the solutions and inputs w, x, y and z
+        if (w == solution1) 
+        {
+        perfect = perfect + 1;
+        solone = a;
+        }
+        if (x == solution2)
+        {
+        perfect = perfect + 1;
+        soltwo = b;
+        }
+        if (y == solution3)
+        {
+        perfect = perfect + 1;
+        solthree = c;
+        }
+        if (z == solution4)
+        {
+        perfect = perfect + 1;
+        solfour = d;
+        }
+
+        if (solone != a)    //checks for misplaced matches if there is no perfect match for solution one
+        {
+           if (solution1 == x && (solone != b) && (soltwo != b) && (solthree != b) && (solfour != b)) //is solution 1 equal to x if not already matched
+           {
+                solone = b;
+                misplaced = misplaced + 1;
+           }
+           if (solution1 == y && (solone != c) && (soltwo != c) && (solthree != c) && (solfour != c)) //is solution 1 equal to y if not already matched
+           {
+                solone = c;
+                misplaced = misplaced + 1;
+           }
+           if (solution1 == z && (solone != d) &&(soltwo != d) && (solthree != d) && (solfour != d)) //is solution 1 equal to z if not already matched
+           {
+               solone = d;
+               misplaced = misplaced + 1;
+           }
+        }
+
+        if (soltwo != b)    //checks for misplaced matches if there is no perfect match for solution two
+        {
+            if (solution2 == w && (solone != a) && (soltwo != a ) && (solthree != a) && (solfour != a)) //is solution 2 equal to w if not already matched
+            {
+                soltwo = a;
+                misplaced = misplaced + 1;
+            }
+            if (solution2 == y && (solone != c) && (soltwo != c) && (solthree != c) && (solfour != c)) //is solution 2 equal to y if not already matched
+            {
+                soltwo = c;
+                misplaced = misplaced + 1;
+            }
+            if (solution2 == z && (solone != d) && (soltwo != d) && (solthree != d) && (solfour != d)) //is solution 2 equal to z if not already matched
+            {
+                soltwo = d;
+                misplaced = misplaced + 1;
+            }
+        }
+        if (solthree != c)  //checks for misplaced matches if there is no perfect match for solution three
+        {
+            if (solution3 == w && (solone != a) && (soltwo != a) && (solthree != a) && (solfour != a)) //is solution 3 equal to w if not already matched
+            {
+                solthree = a;
+                misplaced = misplaced + 1;
+            }
+            if (solution3 == x && (solone != b) && (soltwo != b) && (solthree != d) && (solfour != b)) //is solution 3 equal to x if not already matched
+            {
+                solthree = b;
+                misplaced = misplaced + 1;
+            }
+            if (solution3 == z && (solone != d) && (soltwo != d) && (solthree != d) && (solfour != d)) //is solution 3 equal to z if not already matched
+            {
+                solthree = d;
+                misplaced = misplaced + 1;
+            }
+        }
+
+        if (solfour != d)   //checks for misplaced matches if there is no perfect match for solution four
+        {
+            if (solution4 == w && (solone != a) && (soltwo != a) && (solthree != a) && (solfour != a)) //is solution 4 equal to w if not already matched
+            {
+                solfour = a;
+                misplaced = misplaced + 1;
+            }
+            if (solution4 == x && (solone != b) && (soltwo != b) && (solthree != b) && (solfour != b)) //is solution 4 equal to x if not already matched
+            {
+                solfour = b;
+                misplaced = misplaced + 1;
+            }
+            if (solution4 == y && (solone != c) && (soltwo != c) && (solthree != c) && (solfour != c)) //is solution 4 equal to y if not already matched
+            {
+                solfour = c;
+                misplaced = misplaced + 1;
+            }
+        }
+
+        printf ("With guess %d, you got %d perfect matches and %d misplaced matches.\n", guess_number, perfect, misplaced);
+
+        *one = w;
+        *two = x;
+        *three = y;
+        *four = z;
+
         return 1;
     }
     else
     {
+        printf ("make_guess: invalid guess \n");
         return 0;
     }
 }
