@@ -30,6 +30,16 @@ static int solution2;
 static int solution3;
 static int solution4;
 
+/*
+The set_seed function intializes the psuedo random number generator that is later used in the program. It takes a 
+valid user input and makes it the seed of this random number generator. 
+
+The start_game function sets the values for the solutions to the game. The psuedo random number generator is used to do this. 
+
+The make_guess function takes a user guess (that is valid) and checks how many inputs are perfect matches and how many inputs are 
+misplaced matches. This is done by pairing together two variables so that they do not repeat. 
+*/
+
 
 /*
  * set_seed -- This function sets the seed value for pseudorandom
@@ -75,7 +85,7 @@ set_seed (const char seed_str[])
     }
     else
     {
-        printf ("set_seed: invalid guess");     //error 
+        printf ("set_seed: invalid seed\n");     //error 
         return 0;
     }
 }
@@ -158,10 +168,10 @@ make_guess (const char guess_str[], int* one, int* two, int* three, int* four)
 
     if (rv != 4 || ((w || x || y || z) <= 0 ))  //if there are any items in post then return 0 and the guess is invalid
     {
-        printf ("make_guess: invalid guess \n");
+        printf ("make_guess: invalid guess\n");
         return 0;
     }
-    else if ((rv = 4) && (w <= 8) && (x <= 8) && (y <= 8) && (z <= 8))  //if all guesses are valid and 
+    else if ((rv = 4) && (w <= 8 && w > 0) && (x <= 8 && x > 0) && (y <= 8 && y > 0) && (z <= 8 && z > 0))  //if all guesses are valid and 
     {
         int perfect = 0;        //counts the number of perfect matches
         int misplaced = 0;      //counts the number of misplaced matches
@@ -201,17 +211,17 @@ make_guess (const char guess_str[], int* one, int* two, int* three, int* four)
 
         if (solone != a)    //checks for misplaced matches if there is no perfect match for solution one
         {
-           if (solution1 == x && (solone != b) && (soltwo != b) && (solthree != b) && (solfour != b)) //is solution 1 equal to x if not already matched
+           if (solution1 == x && (solone != b || a || c || d) && (soltwo != b) && (solthree != b) && (solfour != b)) //is solution 1 equal to x if not already matched
            {
                 solone = b;
                 misplaced = misplaced + 1;
            }
-           if (solution1 == y && (solone != c) && (soltwo != c) && (solthree != c) && (solfour != c)) //is solution 1 equal to y if not already matched
+           if (solution1 == y && (solone != c || a ||b || d) && (soltwo != c) && (solthree != c) && (solfour != c)) //is solution 1 equal to y if not already matched
            {
                 solone = c;
                 misplaced = misplaced + 1;
            }
-           if (solution1 == z && (solone != d) &&(soltwo != d) && (solthree != d) && (solfour != d)) //is solution 1 equal to z if not already matched
+           if (solution1 == z && (solone != d || a || b || c) &&(soltwo != d) && (solthree != d) && (solfour != d)) //is solution 1 equal to z if not already matched
            {
                solone = d;
                misplaced = misplaced + 1;
@@ -220,17 +230,17 @@ make_guess (const char guess_str[], int* one, int* two, int* three, int* four)
 
         if (soltwo != b)    //checks for misplaced matches if there is no perfect match for solution two
         {
-            if (solution2 == w && (solone != a) && (soltwo != a ) && (solthree != a) && (solfour != a)) //is solution 2 equal to w if not already matched
+            if (solution2 == w && (solone != a) && (soltwo != a || b || c || d) && (solthree != a) && (solfour != a)) //is solution 2 equal to w if not already matched
             {
                 soltwo = a;
                 misplaced = misplaced + 1;
             }
-            if (solution2 == y && (solone != c) && (soltwo != c) && (solthree != c) && (solfour != c)) //is solution 2 equal to y if not already matched
+            if (solution2 == y && (solone != c) && (soltwo != c || a || b || d) && (solthree != c) && (solfour != c)) //is solution 2 equal to y if not already matched
             {
                 soltwo = c;
                 misplaced = misplaced + 1;
             }
-            if (solution2 == z && (solone != d) && (soltwo != d) && (solthree != d) && (solfour != d)) //is solution 2 equal to z if not already matched
+            if (solution2 == z && (solone != d) && (soltwo != d || a || b || c) && (solthree != d) && (solfour != d)) //is solution 2 equal to z if not already matched
             {
                 soltwo = d;
                 misplaced = misplaced + 1;
@@ -238,17 +248,17 @@ make_guess (const char guess_str[], int* one, int* two, int* three, int* four)
         }
         if (solthree != c)  //checks for misplaced matches if there is no perfect match for solution three
         {
-            if (solution3 == w && (solone != a) && (soltwo != a) && (solthree != a) && (solfour != a)) //is solution 3 equal to w if not already matched
+            if (solution3 == w && (solone != a) && (soltwo != a) && (solthree != a || b || c || d) && (solfour != a)) //is solution 3 equal to w if not already matched
             {
                 solthree = a;
                 misplaced = misplaced + 1;
             }
-            if (solution3 == x && (solone != b) && (soltwo != b) && (solthree != d) && (solfour != b)) //is solution 3 equal to x if not already matched
+            if (solution3 == x && (solone != b) && (soltwo != b) && (solthree != b || a || c || d) && (solfour != b)) //is solution 3 equal to x if not already matched
             {
                 solthree = b;
                 misplaced = misplaced + 1;
             }
-            if (solution3 == z && (solone != d) && (soltwo != d) && (solthree != d) && (solfour != d)) //is solution 3 equal to z if not already matched
+            if (solution3 == z && (solone != d) && (soltwo != d) && (solthree != d || a || b || c)  && (solfour != d)) //is solution 3 equal to z if not already matched
             {
                 solthree = d;
                 misplaced = misplaced + 1;
@@ -257,17 +267,17 @@ make_guess (const char guess_str[], int* one, int* two, int* three, int* four)
 
         if (solfour != d)   //checks for misplaced matches if there is no perfect match for solution four
         {
-            if (solution4 == w && (solone != a) && (soltwo != a) && (solthree != a) && (solfour != a)) //is solution 4 equal to w if not already matched
+            if (solution4 == w && (solone != a) && (soltwo != a) && (solthree != a) && (solfour != a || b || c || d)) //is solution 4 equal to w if not already matched
             {
                 solfour = a;
                 misplaced = misplaced + 1;
             }
-            if (solution4 == x && (solone != b) && (soltwo != b) && (solthree != b) && (solfour != b)) //is solution 4 equal to x if not already matched
+            if (solution4 == x && (solone != b) && (soltwo != b) && (solthree != b) && (solfour != b || a || c || d)) //is solution 4 equal to x if not already matched
             {
                 solfour = b;
                 misplaced = misplaced + 1;
             }
-            if (solution4 == y && (solone != c) && (soltwo != c) && (solthree != c) && (solfour != c)) //is solution 4 equal to y if not already matched
+            if (solution4 == y && (solone != c) && (soltwo != c) && (solthree != c) && (solfour != c || a || b || d)) //is solution 4 equal to y if not already matched
             {
                 solfour = c;
                 misplaced = misplaced + 1;
@@ -275,7 +285,8 @@ make_guess (const char guess_str[], int* one, int* two, int* three, int* four)
         }
 
         printf ("With guess %d, you got %d perfect matches and %d misplaced matches.\n", guess_number, perfect, misplaced);
-
+        guess_number = guess_number + 1;
+        //this updates the guesses in main.c 
         *one = w;
         *two = x;
         *three = y;
@@ -283,9 +294,9 @@ make_guess (const char guess_str[], int* one, int* two, int* three, int* four)
 
         return 1;
     }
-    else
+    else //if there is an invaild input the return 0
     {
-        printf ("make_guess: invalid guess \n");
+        printf ("make_guess: invalid guess\n");
         return 0;
     }
 }
