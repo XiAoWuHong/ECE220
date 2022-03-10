@@ -3,13 +3,17 @@ Compilation Results:
 
 ******Testing mp6******
 ******Test 0******
-countLiveNeighbor test failed
+countLiveNeighbor test passed
+updateBoard test passed
+aliveStable test passed
 ******Test 1******
-countLiveNeighbor test failed
+countLiveNeighbor test passed
+updateBoard test passed
+aliveStable test passed
 
-Failed the nightly test.
+Pass the nightly test!!!
 This nightly test is focusing on compilation error not functionality test.
 This nightly report only tests on the released testcases.
 There are many hidden edge testcase for the MP. Please test it yourselve.
 HIGHLY RECOMMEND YOU TO START YOUR MP EARLY!!!!!!!
-Timestamp: 2022-03-10_00:28:09
+Timestamp: 2022-03-10_12:15:47
