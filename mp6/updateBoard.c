@@ -13,25 +13,25 @@
  */
 
 int countLiveNeighbor(int* board, int boardRowSize, int boardColSize, int row, int col){
-    int a;  //how many living cells are there around the cell we are checking
-    int currRow = row;
-    int checkRow;   //the row in the array we are checking
-    int currCol = col;
-    int checkCol;   //the column in the array we are checking
-    for (checkRow = currRow - 1;checkRow <= currRow + 1; checkRow++){
-        if (checkRow >= 0 && checkRow <= boardRowSize){
-            for (checkCol = currCol - 1; checkCol <= currCol + 1; checkCol++){
-                if (checkCol >= 0 && checkCol <= boardColSize){
-                    if (checkCol != currCol && checkRow != currRow){
-                        if (board[checkRow * boardRowSize + checkCol] == 1){
-                            a++;
+int living = 0;
+int CheckRow;
+int CheckCol;
+int currentCell = row*boardColSize + col;
+    for (CheckRow = row - 1; CheckRow <= row + 1; CheckRow++){
+        if (CheckRow >= 0 && CheckRow < boardRowSize){
+            for (CheckCol = col - 1; CheckCol <= col + 1; CheckCol++){
+                if (CheckCol >= 0 && CheckCol < boardColSize){
+                    int n = CheckRow*boardColSize + CheckCol;
+                    if (n != currentCell){
+                        if (board[n] == 1){
+                            living++;
                         }
                     }
                 }
             }
         }
     }
-    return a;
+    return living;
 }
 /*
  * Update the game board to the next step.
@@ -43,25 +43,37 @@ int countLiveNeighbor(int* board, int boardRowSize, int boardColSize, int row, i
  * Output: board is updated with new values for next step.
  */
 void updateBoard(int* board, int boardRowSize, int boardColSize) {
-    int row = 0;
-    int col = 0;
-    int cell;
-
-    for (cell = 0; cell <= boardRowSize * boardColSize; cell++){
-        if (col == boardColSize){
-            row = row + 1;
-            col = 0;
+int updated_row = 0;
+int updated_col = 0;
+int dummy_board[boardRowSize*boardColSize];
+    for (updated_row = 0; updated_row < boardRowSize; updated_row++){
+        for (updated_col = 0; updated_col < boardColSize; updated_col++){
+            int n = updated_row*boardColSize + updated_col;
+            int living_neighbors = countLiveNeighbor(board, boardRowSize, boardColSize, updated_row, updated_col);
+            int status = board[n];
+            if (status == 1){
+                if (living_neighbors == 2 || living_neighbors == 3){
+                    dummy_board[n] = 1;
+                }
+                else {
+                    dummy_board[n] = 0;
+                }
+            }
+            else if (status == 0){
+                if (living_neighbors == 3){
+                    dummy_board[n] = 1;
+                }
+                else{
+                    dummy_board[n] = 0;
+                }
+            }
         }
-        if (row == boardRowSize && col == boardColSize){
-            break;
-        }
-        if (countLiveNeighbor(board, boardRowSize, boardColSize, row, col) == (2 || 3)){
-            board[row * boardRowSize + col] = 1;
-        }
-        col++;
+    }
+    int copy;
+    for (copy = 0; copy <= boardColSize*boardRowSize; copy++){
+        board[copy] = dummy_board[copy];
     }
 }
-
 /*
  * aliveStable
  * Checks if the alive cells stay the same for next step
@@ -74,26 +86,18 @@ void updateBoard(int* board, int boardRowSize, int boardColSize) {
  * return 0 if the alive cells change for the next step.
  */ 
 int aliveStable(int* board, int boardRowSize, int boardColSize){
-    int board_copy[boardRowSize * boardColSize];
-    int b = 0;
-    int counter;
-    for (counter = 0; counter <= boardRowSize * boardColSize; counter++){
-        if (board_copy[counter] == board[counter]){
-            b++;
+for (int row = 0; row < boardRowSize; row++){
+        for (int col = 0; col < boardColSize; col++){
+                int n = row*boardColSize + col;
+                int alive_neighbors = countLiveNeighbor(board, boardRowSize, boardColSize, row, col);
+                int status = board[n];
+                if (status == 1 && alive_neighbors != 2 && alive_neighbors != 3){
+                    return 0;
+                }
+                if (status == 0 && alive_neighbors == 3){
+                    return 0;
+                }
+            }
         }
-        else{
-            break;
-        }
-    }
-    if (b == boardColSize * boardRowSize){
-        return 1;
-    }
-    else{
-        return 0;
-    }
+return 1;
 }
-
-				
-				
-			
-
