@@ -73,13 +73,12 @@ int is_val_valid(const int val, const int i, const int j, const int sudoku[9][9]
   assert(i>=0 && i<9 && j>=0 && j<9);
 
   // BEG TODO
-  if (is_val_in_row(val, i, sudoku) && is_val_in_col(val, j, sudoku) && is_val_in_3x3_zone(val, i, j, sudoku) == 1){
+  if (is_val_in_row(val, i, sudoku) || is_val_in_col(val, j, sudoku) || is_val_in_3x3_zone(val, i, j, sudoku) == 1){
     return 0;
   }
   return 1;
   // END TODO
 }
-
 
 //Function: find_unassigned_location
 //Return true if there is an unassigned cell.
@@ -95,7 +94,6 @@ int find_unassigned_location(int *i,int *j,const int sudoku[9][9]){
   }
 return 0;
 }
-
 
 // Procedure: solve_sudoku
 // Solve the given sudoku instance.
@@ -148,8 +146,3 @@ void parse_sudoku(const char fpath[], int sudoku[9][9]) {
   }
   fclose(reader);
 }
-
-
-
-
-
