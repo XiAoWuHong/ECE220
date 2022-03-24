@@ -187,7 +187,6 @@ int solve_sudoku(int sudoku[9][9]) {
       sudoku[i][j] = 0;
     }
   }
-  //end the program
   return 0;
   // END TODO.
 }
