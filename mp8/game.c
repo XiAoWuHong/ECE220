@@ -1,5 +1,7 @@
 #include "game.h"
 
+//group members: V Verma, Peter Gianettos
+
 
 game * make_game(int rows, int cols)
 /*! Create an instance of a game structure with the given number of rows
@@ -14,7 +16,15 @@ game * make_game(int rows, int cols)
     mygame->cells = malloc(rows*cols*sizeof(cell));
 
     //YOUR CODE STARTS HERE:  Initialize all other variables in game struct
+    mygame->score = 0;
+    mygame->cols = cols;
+    mygame->rows = rows;
 
+    for(int fillx = 0; fillx < rows; fillx++){
+        for(int filly = 0; filly < cols; filly++){
+            mygame->cells[fillx*cols + filly] = -1;
+        }
+    }
 
     return mygame;
 }
@@ -33,7 +43,17 @@ void remake_game(game ** _cur_game_ptr,int new_rows,int new_cols)
 
 	 //YOUR CODE STARTS HERE:  Re-initialize all other variables in game struct
 
-	return;	
+    (*_cur_game_ptr)->cols = new_cols;
+    (*_cur_game_ptr)->rows = new_rows;
+    (*_cur_game_ptr)->score = 0;
+
+    for(int fillx = 0; fillx < new_rows; fillx++){
+        for(int filly = 0; filly < new_cols; filly++){
+            (*_cur_game_ptr)->cells[fillx*new_cols+filly] = -1;
+        }
+    }
+
+	return;
 }
 
 void destroy_game(game * cur_game)
@@ -54,8 +74,15 @@ cell * get_cell(game * cur_game, int row, int col)
 */
 {
     //YOUR CODE STARTS HERE
+    if (row || col < 0){
+        if((row > cur_game->rows) || (col > cur_game->cols)){
+        return NULL;
+        }
 
-    return NULL;
+    }
+    int thicccness = cur_game->cols; //made this cuz it funny
+    
+return &cur_game->cells[thicccness*row+col];
 }
 
 int move_w(game * cur_game)
@@ -67,28 +94,273 @@ int move_w(game * cur_game)
 */
 {
     //YOUR CODE STARTS HERE
+    
+    int rows = cur_game->rows;
+    int cols = cur_game->cols;
+    game * dummy_board = malloc(sizeof(game));
+    dummy_board->cells = malloc(rows*cols*sizeof(cell));
+    for (int fillx = 0; fillx < rows; fillx++){
+        for (int filly = 0; filly < cols; filly++){
+            dummy_board->cells[fillx*cols+filly] = cur_game->cells[fillx*cols+filly];
+        }
+    }
+ 
 
-    return 1;
+    int n;  //for column numbers
+    int m;  //for row numbers
+    for(n = 0; n < cols; n++){
+        for (m = 0; m < rows; m++){
+            int i; //for finding target rows
+            for (i = 1; i <= m; i++){
+                if (m-i >= 0){
+                    if (cur_game->cells[(m-i)*cols+n] == -1){
+                        cur_game->cells[(m-i)*cols+n] = cur_game->cells[(m-i+1)*cols+n];
+                        cur_game->cells[(m-i+1)*cols+n] = -1;
+                    }
+                }
+            }
+        }
+    }
+    // ixj
+    for (int j = 0; j < cols; j++){
+        for (int i = 0; i < rows; i++){
+            if (i-1 >= 0){
+                if(cur_game->cells[i*cols+j] != -1){
+                    if(cur_game->cells[(i-1)*cols+j] == cur_game->cells[i*cols+j]){
+                        cur_game->cells[(i-1)*cols+j] = cur_game->cells[(i-1)*cols+j] * 2;
+                        cur_game->cells[i*cols+j] = -1;
+                    }
+                }
+            }
+        }
+    }
+
+    for(n = 0; n < cols; n++){
+        for (m = 0; m < rows; m++){
+            int i; //for finding target rows
+            for (i = 1; i <= m; i++){
+                if (m-i >= 0){
+                    if (cur_game->cells[(m-i)*cols+n] == -1){
+                        cur_game->cells[(m-i)*cols+n] = cur_game->cells[(m-i+1)*cols+n];
+                        cur_game->cells[(m-i+1)*cols+n] = -1;
+                    }
+                }
+            }
+        }
+    }
+
+    for(int checkx = 0; checkx < rows; checkx++){
+        for(int checky = 0; checky < cols; checky++){
+            if(dummy_board->cells[checkx*cols+checky] != cur_game->cells[checkx*cols+checky]){
+            free(dummy_board->cells);
+            free(dummy_board);
+            dummy_board = NULL;
+            return 1;
+            }
+        }
+    }
+    return 0;
 };
 
 int move_s(game * cur_game) //slide down
 {
     //YOUR CODE STARTS HERE
 
-    return 1;
+    int rows = cur_game->rows;
+    int cols = cur_game->cols;
+    game * dummy_board = malloc(sizeof(game));
+    dummy_board->cells = malloc(rows*cols*sizeof(cell));
+    for (int fillx = 0; fillx < rows; fillx++){
+        for (int filly = 0; filly < cols; filly++){
+            dummy_board->cells[fillx*cols+filly] = cur_game->cells[fillx*cols+filly];
+        }
+    }
+
+    for (int n = cols - 1; n >= 0; n--){
+        for (int m = rows - 1; m >= 0; m--){
+            for (int i = 1; i >= 0; i--){
+                if (m+i < cols){
+                    if (cur_game->cells[(m+i)*cols+n] == -1){
+                        cur_game->cells[(m+i)*cols+n] = cur_game->cells[(m+i-1)*cols+n];
+                        cur_game->cells[(m+i-1)*cols+n] = -1;
+                    }
+                }
+            }
+        }
+    }
+
+    for (int j = cols - 1; j >= 0; j--){
+        for (int i = rows - 1; i >= 0; i--){
+            if (i+1 < rows){
+                if(cur_game->cells[(i+1)*cols+j] == cur_game->cells[i*cols+j]){
+                    cur_game->cells[(i+1)*cols+j] = cur_game->cells[(i+1)*cols+j] * 2;
+                    cur_game->cells[i*cols+j] = -1;
+                }
+            }
+        }
+    }
+
+    for (int n = cols - 1; n >= 0; n--){
+        for (int m = rows - 1; m >= 0; m--){
+            for (int i = 1; i >= 0; i--){
+                if (m+i > cols-1){
+                    if (cur_game->cells[(m+i)*cols+n] == -1){
+                        cur_game->cells[(m+i)*cols+n] = cur_game->cells[(m+i-1)*cols+n];
+                        cur_game->cells[(m+i-1)*cols+n] = -1;
+                    }
+                }
+            }
+        }
+    }
+
+    for(int checkx = 0; checkx < rows; checkx++){
+        for(int checky = 0; checky < cols; checky++){
+            if(dummy_board->cells[checkx*cols+checky] != cur_game->cells[checkx*cols+checky]){
+            free(dummy_board->cells);
+            free(dummy_board);
+            dummy_board = NULL;
+            return 1;
+            }
+        }
+    }
+    return 0;
 };
 
 int move_a(game * cur_game) //slide left
 {
     //YOUR CODE STARTS HERE
 
-    return 1;
+    int rows = cur_game->rows;
+    int cols = cur_game->cols;
+    game * dummy_board = malloc(sizeof(game));
+    dummy_board->cells = malloc(rows*cols*sizeof(cell));
+    for (int fillx = 0; fillx < rows; fillx++){
+        for (int filly = 0; filly < cols; filly++){
+            dummy_board->cells[fillx*cols+filly] = cur_game->cells[fillx*cols+filly];
+        }
+    }
+
+
+
+    //mxn
+    for(int m = 0; m < rows; m++){
+        for (int n = 0; n < cols; n++){
+            for(int j = 1; j <= n; j++){
+                if(n-j >= 0){
+                    if(cur_game->cells[m*cols+(n-j)] == -1){
+                        cur_game->cells[m*cols+(n-j)] = cur_game->cells[m*cols+(n-j+1)];
+                        cur_game->cells[m*cols+(n-j+1)] = -1;
+
+                    }
+                }
+            }
+        }
+    }
+
+    for (int i = 0; i < rows; i++){
+        for (int j = 0; j < cols; j++){
+            if(j-1>=0){
+                if(cur_game->cells[i*cols+j] != -1){
+                    if (cur_game->cells[i*cols+(j-1)] == cur_game->cells[i*cols+j]){
+                        cur_game->cells[i*cols+(j-1)] = cur_game->cells[i*cols+(j-1)] * 2;
+                        cur_game->cells[i*cols+j] = -1;
+                    }
+                }
+            }
+        }
+    }
+
+    for(int m = 0; m < rows; m++){
+        for (int n = 0; n < cols; n++){
+            for(int j = 1; j <= n; j++){
+                if(n-j >= 0){
+                    if(cur_game->cells[m*cols+(n-j)] == -1){
+                        cur_game->cells[m*cols+(n-j)] = cur_game->cells[m*cols+(n-j+1)];
+                        cur_game->cells[m*cols+(n-j+1)] = -1;
+
+                    }
+                }
+            }
+        }
+    }
+
+    for(int checkx = 0; checkx < rows; checkx++){
+        for(int checky = 0; checky < cols; checky++){
+            if(dummy_board->cells[checkx*cols+checky] != cur_game->cells[checkx*cols+checky]){
+            free(dummy_board->cells);
+            free(dummy_board);
+            dummy_board = NULL;
+            return 1;
+            }
+        }
+    }
+    return 0;
 };
 
 int move_d(game * cur_game){ //slide to the right
     //YOUR CODE STARTS HERE
 
-    return 1;
+    int rows = cur_game->rows;
+    int cols = cur_game->cols;
+    game * dummy_board = malloc(sizeof(game));
+    dummy_board->cells = malloc(rows*cols*sizeof(cell));
+    for (int fillx = 0; fillx < rows; fillx++){
+        for (int filly = 0; filly < cols; filly++){
+            dummy_board->cells[fillx*cols+filly] = cur_game->cells[fillx*cols+filly];
+        }
+    }
+
+    for (int m = 0; m < rows; m++){
+        for(int n = cols - 1; n >= 0; n--){
+            for (int j = 1; j <= n; n++){
+                if(n+j < cols){
+                    if (cur_game->cells[m*cols+(n+j)] == -1){
+                        cur_game->cells[m*cols+(n+j)] = cur_game->cells[m*cols+(n+j-1)];
+                        cur_game->cells[m*cols+(n+j-1)] = -1;
+
+                    }
+                }
+            }
+        }
+    }
+ 
+for (int i = 0; i < rows; i++){
+    for (int j = cols - 1; j >= 0; j--){
+        if(j + 1 < cols){
+            if(cur_game->cells[i*cols+(j+1)] == cur_game->cells[i*cols+j]){
+                cur_game->cells[i*cols+(j+1)] = cur_game->cells[i*cols+(j+1)] * 2;
+                cur_game->cells[i*cols+j] = -1;
+            }
+        }
+    }
+}
+
+    for (int m = 0; m < rows; m++){
+        for(int n = cols - 1; n >= 0; n--){
+            for (int j = 1; j <= n; n++){
+                if(n+j < cols){
+                    if (cur_game->cells[m*cols+(n+j)] == -1){
+                        cur_game->cells[m*cols+(n+j)] = cur_game->cells[m*cols+(n+j-1)];
+                        cur_game->cells[m*cols+(n+j-1)] = -1;
+
+                    }
+                }
+            }
+        }
+    }
+
+
+    for(int checkx = 0; checkx < rows; checkx++){
+        for(int checky = 0; checky < cols; checky++){
+            if(dummy_board->cells[checkx*cols+checky] != cur_game->cells[checkx*cols+checky]){
+            free(dummy_board->cells);
+            free(dummy_board);
+            dummy_board = NULL;
+            return 1;
+            }
+        }
+    }
+    return 0;
 };
 
 int legal_move_check(game * cur_game)
@@ -98,6 +370,12 @@ int legal_move_check(game * cur_game)
  */
 {
     //YOUR CODE STARTS HERE
+
+    game * dummy_board = cur_game;
+
+    if(move_a(dummy_board) && move_s(dummy_board) && move_d(dummy_board) && move_w(dummy_board) == 0){
+        return 0;
+    }
 
     return 1;
 }
