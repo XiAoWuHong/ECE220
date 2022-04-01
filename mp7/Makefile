@@ -15,3 +15,9 @@ sudoku2: mp7
 
 sudoku3: mp7
 	./mp7 sudoku3.txt
+
+sudoku4: mp7
+	./mp7 sudoku4.txt
+
+sudoku5: mp7
+	./mp7 sudoku5.txt
