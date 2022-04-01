@@ -8,10 +8,13 @@ test - rows, cols, and score: pass
 Grade_test0: Pass
 
 ****** Testing get_cell() ******
-test - get_cell(): [+3][+2]
-Grade_test1: Pass
+test - get_cell(): [+3]fail to ret null for out of bounds
+Grade_test1: Failed
 
 ****** Testing move_d() ******
+test - move_d ret: pass 
+test - move_d tiles move correctly: pass  
+Grade_test2: Pass
 
 ****** Testing legal_move_check() ******
 test - legal move check: failed to detect end game
@@ -26,4 +29,4 @@ This nightly test is focusing on compilation error not functionality test.
 This nightly report only tests on the released testcases.
 There are many hidden edge testcase for the MP. Please test it yourselve.
 HIGHLY RECOMMEND YOU TO START YOUR MP EARLY!!!!!!!
-Timestamp: 2022-03-31_18:10:52
+Timestamp: 2022-03-31_20:37:41
