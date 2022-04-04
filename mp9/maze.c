@@ -12,7 +12,29 @@
  */
 maze_t * createMaze(char * fileName)
 {
-    // Your code here. Make sure to replace following line with your own code.
+    FILE *reader = fopen(fileName, "r");
+    // assert(reader != NULL);
+    int width, height;
+
+    fscanf(reader, "%d", &width);
+    fscanf(reader, "%d", &height);
+
+    maze_t * aMAZEing = malloc(sizeof(maze_t));
+    aMAZEing->cells = (char**)malloc(height*sizeof(char *));
+     
+    int fillthatboy;
+    for(fillthatboy = 0; fillthatboy < height; fillthatboy++){
+        aMAZEing->cells[fillthatboy] = (char*)malloc(width*sizeof(char));
+        int lmao;
+        for(lmao = 0; lmao < width; lmao++){
+            fscanf(reader, "%c", & (*(*(aMAZEing->cells + fillthatboy) + lmao)));
+        }
+    }
+
+
+
+    return aMAZEing;
+
     return NULL;
 }
 
@@ -25,7 +47,8 @@ maze_t * createMaze(char * fileName)
  */
 void destroyMaze(maze_t * maze)
 {
-    // Your code here.
+    free(maze->cells);
+    free(maze);
 }
 
 /*
@@ -40,6 +63,8 @@ void destroyMaze(maze_t * maze)
 void printMaze(maze_t * maze)
 {
     // Your code here.
+
+    
 }
 
 /*
