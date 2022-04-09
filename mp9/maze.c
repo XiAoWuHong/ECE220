@@ -18,7 +18,7 @@ maze_t * createMaze(char * fileName)
 
     fscanf(reader, "%d %d", &aMAZEing->width, &aMAZEing->height);
 
-    aMAZEing->cells = (char**)malloc(aMAZEing->height*sizeof(char *));
+    aMAZEing->cells = malloc(aMAZEing->height*sizeof(char *));
     int god;
     for (god = 0; god < aMAZEing->height; god++){
         aMAZEing->cells[god] = malloc(aMAZEing->width * sizeof(char));
@@ -59,13 +59,9 @@ maze_t * createMaze(char * fileName)
  */
 void destroyMaze(maze_t * maze)
 {
-     int fillthatboy;
-    for(fillthatboy = 0; fillthatboy < maze->height; fillthatboy++){
-        maze->cells[fillthatboy] = (char*)malloc(maze->width*sizeof(char));
-        int lmao;
-        for(lmao = 0; lmao < maze->width; lmao++){
-            free( (*(maze->cells + fillthatboy)));
-        }
+    int god;
+    for (god = 0; god < maze->height; god++){
+        free(maze->cells[god]);
     }
     free(maze->cells);
     free(maze);
