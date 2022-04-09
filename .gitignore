@@ -1,5 +1,7 @@
 *.obj
 *.sym
+*.o
+*.vscode
 *Scratch_Space
 *lab1
 *lab2a
@@ -10,6 +12,7 @@
 *lab6
 *lab7
 *lab8
+*lab9
 *mp1
 *mp2
 *mp3

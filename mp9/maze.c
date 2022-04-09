@@ -27,7 +27,7 @@ maze_t * createMaze(char * fileName)
         aMAZEing->cells[fillthatboy] = (char*)malloc(width*sizeof(char));
         int lmao;
         for(lmao = 0; lmao < width; lmao++){
-            fscanf(reader, "%c", & (*(*(aMAZEing->cells + fillthatboy) + lmao)));
+            getc(reader, (*(*(aMAZEing->cells + fillthatboy) + lmao)));
         }
     }
 
@@ -63,8 +63,16 @@ void destroyMaze(maze_t * maze)
 void printMaze(maze_t * maze)
 {
     // Your code here.
+    int i, j = 0;
 
-    
+    for (i = 0; i < maze->width; i++){
+        for ( j = 0; j < maze->height; j++)
+        {
+            printf("%c", (*(*(maze->cells + i) + j)));
+        }
+        
+    }
+      
 }
 
 /*
@@ -78,6 +86,31 @@ void printMaze(maze_t * maze)
  */ 
 int solveMazeDFS(maze_t * maze, int col, int row)
 {
-    // Your code here. Make sure to replace following line with your own code.
+    int bound_row = maze->width - 1;
+    int bound_col = maze->height - 1;
+
+    if ((col > bound_col) || (row > bound_row)){
+        return 0;
+    }
+    if (maze->cells[col][row] != ' '){
+        return 0;
+    }
+    if (maze->cells[col][row] == 'E'){
+        return 1;
+    }
+    maze->cells[col][row] = '*';
+    if (solveMazeDFS(maze, col-1, row) == 1){
+        return 1;
+    }
+    if (solveMazeDFS(maze, col+1, row) == 1){
+        return 1;
+    }
+    if (solveMazeDFS(maze, col, row-1) == 1){
+        return 1;
+    }
+    if (solveMazeDFS(maze, col, row+1) == 1){
+        return 1;
+    }
+    maze->cells[col][row] = ' ';
     return 0;
 }
