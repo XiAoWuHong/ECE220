@@ -10,20 +10,20 @@ createMaze score: 20
 
 Testing destroyMaze (10 pts)
 destroyMaze score: 10 points if no memory leaks/errors otherwise 0
-==13016== Memcheck, a memory error detector
-==13016== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==13016== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
-==13016== Command: ./grader 1
-==13016== 
-==13016== 
-==13016== HEAP SUMMARY:
-==13016==     in use at exit: 0 bytes in 0 blocks
-==13016==   total heap usage: 54 allocs, 54 frees, 3,609 bytes allocated
-==13016== 
-==13016== All heap blocks were freed -- no leaks are possible
-==13016== 
-==13016== For lists of detected and suppressed errors, rerun with: -s
-==13016== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
+==89721== Memcheck, a memory error detector
+==89721== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==89721== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==89721== Command: ./grader 1
+==89721== 
+==89721== 
+==89721== HEAP SUMMARY:
+==89721==     in use at exit: 0 bytes in 0 blocks
+==89721==   total heap usage: 54 allocs, 54 frees, 3,609 bytes allocated
+==89721== 
+==89721== All heap blocks were freed -- no leaks are possible
+==89721== 
+==89721== For lists of detected and suppressed errors, rerun with: -s
+==89721== ERROR SUMMARY: 0 errors from 0 contexts (suppressed: 0 from 0)
 
 Testing printMaze 
 PrintMazeScore: 0
@@ -34,4 +34,4 @@ This nightly test is focusing on compilation error not functionality test.
 This nightly report only tests on the released testcases.
 There are many hidden edge testcase for the MP. Please test it yourselve.
 HIGHLY RECOMMEND YOU TO START YOUR MP EARLY!!!!!!!
-Timestamp: 2022-04-09_14:26:49
+Timestamp: 2022-04-09_17:12:40
