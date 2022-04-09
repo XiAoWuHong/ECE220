@@ -27,7 +27,7 @@ maze_t * createMaze(char * fileName)
         aMAZEing->cells[fillthatboy] = (char*)malloc(width*sizeof(char));
         int lmao;
         for(lmao = 0; lmao < width; lmao++){
-            getc(reader, (*(*(aMAZEing->cells + fillthatboy) + lmao)));
+             (*(*(aMAZEing->cells + fillthatboy) + lmao)) = getc(reader);
         }
     }
 
@@ -47,6 +47,14 @@ maze_t * createMaze(char * fileName)
  */
 void destroyMaze(maze_t * maze)
 {
+     int fillthatboy;
+    for(fillthatboy = 0; fillthatboy < maze->height; fillthatboy++){
+        maze->cells[fillthatboy] = (char*)malloc(maze->width*sizeof(char));
+        int lmao;
+        for(lmao = 0; lmao < maze->width; lmao++){
+            free( (*(maze->cells + fillthatboy)));
+        }
+    }
     free(maze->cells);
     free(maze);
 }
