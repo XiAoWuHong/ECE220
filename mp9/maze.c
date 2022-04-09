@@ -14,7 +14,6 @@ maze_t * createMaze(char * fileName)
 {
     FILE *reader = fopen(fileName, "r");
     // assert(reader != NULL);
-    int width, height;
     maze_t * aMAZEing = malloc(sizeof(maze_t));
 
     fscanf(reader, "%d %d", &aMAZEing->width, &aMAZEing->height);
