@@ -2,6 +2,19 @@
 #include <stdlib.h>
 #include "maze.h"
 
+/* INTRO PARAGRAPH
+In this MP we implemented a maze solver that takes a text file with maze and then gives a solution using a 
+depth-first seach (DFS) algorithm. We first create the maze in our program by opening the text file 
+containing the maze and copying the dimensions as well the maze itself using a combination of fscanf and fgetc. 
+The createMaze function memory is allocated for the struct, the array of pointer, and the arrays containing 
+each row of the maze. We then return the maze struct to use in our DFS algorithm and print function. Our print 
+function consists of a two for loops that go through each possible cooridinate for the array then prints each 
+cell individully. Thisfunction is called twice, once before the maze is solved and once after the maze is solved. 
+The solveMazeDFS function is the depth-first search alogrithm that solves the maze. It goes through each possible
+permutation of solutions starting from START until it reachs a valid solution at END. It's a recursive/backtrakcing
+algorithm. That's MP9 completed.
+*/
+
 
 /*
  * createMaze -- Creates and fills a maze structure from the given file
@@ -12,42 +25,41 @@
  */
 maze_t * createMaze(char * fileName)
 {
-    FILE *reader = fopen(fileName, "r");
-    // assert(reader != NULL);
-    maze_t * aMAZEing = malloc(sizeof(maze_t));
+    FILE *reader = fopen(fileName, "r");    //open file given in read mode
+    maze_t * aMAZEing = malloc(sizeof(maze_t)); //allocate memory for the maze struct and give it a funny name
 
-    fscanf(reader, "%d %d", &aMAZEing->width, &aMAZEing->height);
+    fscanf(reader, "%d %d", &aMAZEing->width, &aMAZEing->height);   //get the two integers from the opened file and designate those as our height and width
 
-    aMAZEing->cells = malloc(aMAZEing->height*sizeof(char *));
-    int god;
+    aMAZEing->cells = malloc(aMAZEing->height*sizeof(char *));  //allocate memory to create an array of pointers the size of height so we can store each row individually
+
+    int god;    //var for the for loop with funny name
+    //this loop allocates memory for each row of the maze that is pointed to by the array of pointers. Each row is stored seperately
     for (god = 0; god < aMAZEing->height; god++){
         aMAZEing->cells[god] = malloc(aMAZEing->width * sizeof(char));
     }
-    
-
-    fgetc(reader);
-    int filler;
-    int fillim;
-    for (filler = 0; filler < aMAZEing->height; filler++){
-        for (fillim = 0; fillim < aMAZEing->width; fillim++){
-            char pp = fgetc(reader);
-            aMAZEing->cells[filler][fillim] = pp;
-            if(pp == 'S'){
+    fgetc(reader); //skips new line
+    int filler, fillim; //funny loop var names
+    //this loop fills the array with the contents of the maze file
+    for (filler = 0; filler < aMAZEing->height; filler++){  //for each row
+        for (fillim = 0; fillim < aMAZEing->width; fillim++){   //for each col
+            char pp = fgetc(reader);    //gets next character to put into the array
+            aMAZEing->cells[filler][fillim] = pp;   //puts next character into the array
+            if(pp == START){    //if the next character in the maze file is the START of the maze then set the start col and row values equal to its coordinates
                 aMAZEing->startColumn = fillim;
                 aMAZEing->startRow = filler;
             }
-            if(pp == 'E'){
+            if(pp == END){  //if the next character in the maze file is the END of the maze then set the end col and row values equal to its coordinates
                 aMAZEing->endColumn = fillim;
                 aMAZEing->endRow = filler;
             }
         }
-        fgetc(reader);
+        fgetc(reader); //skips new line
     }
 
-    fclose(reader);
-    return aMAZEing;
+    fclose(reader); //closes the reader 
+    return aMAZEing;    //returns the completed maze struct
 
-    return NULL;
+    return NULL;    //lmao
 }
 
 /*
@@ -59,12 +71,14 @@ maze_t * createMaze(char * fileName)
  */
 void destroyMaze(maze_t * maze)
 {
-    int god;
+    int god;    //used for the loop 
+
+    //for loop goes through each row of the array to free them independently since they are pointed to at different parts of the memory
     for (god = 0; god < maze->height; god++){
-        free(maze->cells[god]);
+        free(maze->cells[god]); //frees a row of the array 
     }
-    free(maze->cells);
-    free(maze);
+    free(maze->cells);  //frees the array of pointers
+    free(maze); //frees the rest of the struct
 }
 
 /*
@@ -78,14 +92,15 @@ void destroyMaze(maze_t * maze)
  */
 void printMaze(maze_t * maze)
 {
-    // Your code here.
-    int i, j = 0;
+    int i, j = 0;   //vars for each for loop so that we can go through every row and col
 
-    for (i = 0; i < maze->width; i++){
+    //these two for loops go through every cell of the maze
+    for (i = 0; i < maze->width; i++){ 
         for ( j = 0; j < maze->height; j++)
         {
-            printf("%c", (*(*(maze->cells + i) + j)));
+            printf("%c", maze->cells[i][j]);    //prints each cell
         }
+        printf("\n");   //prints new line
         
     }
       
@@ -102,31 +117,39 @@ void printMaze(maze_t * maze)
  */ 
 int solveMazeDFS(maze_t * maze, int col, int row)
 {
-    int bound_row = maze->width - 1;
-    int bound_col = maze->height - 1;
+    //check if the cell is within the bounds of the maze
+    if (row < 0 || row >= maze->height || col < 0 || col >=maze->width){
+        return 0;
+    }
+    //check if the cell is not a path, visited, or wall cell
+    if(maze->cells[row][col] != EMPTY && maze->cells[row][col] != START && maze->cells[row][col] != END){
+        return 0;
+    }
+    //once you reach the end restore the START cell and return 1
+    if(maze->cells[row][col] == END){
+        maze->cells[maze->startRow][maze->startColumn] = START;
+        return 1;
+    }
 
-    if ((col > bound_col) || (row > bound_row)){
-        return 0;
-    }
-    if (maze->cells[col][row] != ' '){
-        return 0;
-    }
-    if (maze->cells[col][row] == 'E'){
+    //set the cell as a part of the path
+    maze->cells[row][col] = PATH;
+
+    //check each direction for a possible solution path
+    if (solveMazeDFS(maze, col-1, row)){
         return 1;
     }
-    maze->cells[col][row] = '*';
-    if (solveMazeDFS(maze, col-1, row) == 1){
+    if (solveMazeDFS(maze, col+1, row)){
         return 1;
     }
-    if (solveMazeDFS(maze, col+1, row) == 1){
+    if (solveMazeDFS(maze, col, row-1)){
         return 1;
     }
-    if (solveMazeDFS(maze, col, row-1) == 1){
+    if (solveMazeDFS(maze, col, row+1)){
         return 1;
     }
-    if (solveMazeDFS(maze, col, row+1) == 1){
-        return 1;
-    }
-    maze->cells[col][row] = ' ';
+
+
+    //since none of the cells next to our current cell are valid moves then we mark the cell as visited and return 0
+    maze->cells[row][col] = VISITED;
     return 0;
 }
