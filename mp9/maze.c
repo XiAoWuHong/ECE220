@@ -15,24 +15,37 @@ maze_t * createMaze(char * fileName)
     FILE *reader = fopen(fileName, "r");
     // assert(reader != NULL);
     int width, height;
-
-    fscanf(reader, "%d", &width);
-    fscanf(reader, "%d", &height);
-
     maze_t * aMAZEing = malloc(sizeof(maze_t));
-    aMAZEing->cells = (char**)malloc(height*sizeof(char *));
-     
-    int fillthatboy;
-    for(fillthatboy = 0; fillthatboy < height; fillthatboy++){
-        aMAZEing->cells[fillthatboy] = (char*)malloc(width*sizeof(char));
-        int lmao;
-        for(lmao = 0; lmao < width; lmao++){
-             (*(*(aMAZEing->cells + fillthatboy) + lmao)) = getc(reader);
+
+    fscanf(reader, "%d %d", &aMAZEing->width, &aMAZEing->height);
+
+    aMAZEing->cells = (char**)malloc(aMAZEing->height*sizeof(char *));
+    int god;
+    for (god = 0; god < aMAZEing->height; god++){
+        aMAZEing->cells[god] = malloc(aMAZEing->width * sizeof(char));
+    }
+    
+
+    fgetc(reader);
+    int filler;
+    int fillim;
+    for (filler = 0; filler < aMAZEing->height; filler++){
+        for (fillim = 0; fillim < aMAZEing->width; fillim++){
+            char pp = fgetc(reader);
+            aMAZEing->cells[filler][fillim] = pp;
+            if(pp == 'S'){
+                aMAZEing->startColumn = fillim;
+                aMAZEing->startRow = filler;
+            }
+            if(pp == 'E'){
+                aMAZEing->endColumn = fillim;
+                aMAZEing->endRow = filler;
+            }
         }
+        fgetc(reader);
     }
 
-
-
+    fclose(reader);
     return aMAZEing;
 
     return NULL;
