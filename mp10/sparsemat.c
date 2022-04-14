@@ -1,12 +1,16 @@
 #include "sparsemat.h"
-
 #include <stdio.h>
 #include <stdlib.h>
+
+//GROUP MEMBERS:
+// V Verma, Peter Giannettos, Ben Olaivar
+
+
 
 //self made helper function to sort the nodes as they are being made
 void sorting_hat (sp_tuples * tuples, sp_tuples_node * newnode){
 
-    sp_tuples_node * comparison_node;
+    sp_tuples_node * comparison_node = malloc(sizeof(sp_tuples_node));
     comparison_node = tuples->tuples_head;  //the first node we will compare the new node to is 
     int j = 1;
 
@@ -24,7 +28,7 @@ void sorting_hat (sp_tuples * tuples, sp_tuples_node * newnode){
 
 
     //the while loop will not stop until I tell it to stop >:)
-    while (j == 0){
+    while (j == 1){
         
         comparison_node = comparison_node->next;    //go to next node in the linked list
 
@@ -58,6 +62,7 @@ void sorting_hat (sp_tuples * tuples, sp_tuples_node * newnode){
             }
         }
     }
+    free(comparison_node);
 }
 
 
@@ -84,13 +89,9 @@ sp_tuples * load_tuples(char* input_file)
 
         //if we correctly read three values then go on
         if (readvalues == 3){
-
-            //we do not want to save 0s
-            if(newnode->value != 0){
                 newnode = malloc(sizeof(sp_tuples_node));   //allocate memory for the newnode
                 tuples->nz = tuples->nz + 1;                //increment the non-sero items counter
                 sorting_hat(tuples, newnode);               //go to helper function to sort the nodes
-            }
         }
         if(readvalues != 3){        //if we did not read three values the we have reached the end of the input file
             youdiewhenIsayso = 1;   //end the while loop
@@ -107,6 +108,21 @@ sp_tuples * load_tuples(char* input_file)
 double gv_tuples(sp_tuples * mat_t,int row,int col)
 
 {
+
+    sp_tuples_node * checknode = malloc(sizeof(sp_tuples_node));
+
+    checknode = mat_t->tuples_head;
+
+    for (int i = 0; i <= mat_t->nz; i++ ){
+        if ((checknode->col == col) && (checknode->row == row)){
+            double retval = checknode->value;
+            free(checknode);
+            return retval;
+        }
+        checknode = checknode->next;
+    }
+
+
     return 0;
 }
 
@@ -114,6 +130,7 @@ double gv_tuples(sp_tuples * mat_t,int row,int col)
 
 void set_tuples(sp_tuples * mat_t, int row, int col, double value)
 {
+    
     return;
 }
 
@@ -129,13 +146,16 @@ void save_tuples(char * file_name, sp_tuples * mat_t)
 
 sp_tuples * add_tuples(sp_tuples * matA, sp_tuples * matB){
 
-	return retmat;
+
+    return matB;
+	// return retmat;
 }
 
 
 
 sp_tuples * mult_tuples(sp_tuples * matA, sp_tuples * matB){ 
-    return retmat;
+    return matB;
+    // return retmat;
 
 }
 
