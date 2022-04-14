@@ -12,59 +12,52 @@ void sorting_hat (sp_tuples * tuples, sp_tuples_node * newnode){
 
     sp_tuples_node * comparison_node = malloc(sizeof(sp_tuples_node));
     comparison_node = tuples->tuples_head;  //the first node we will compare the new node to is 
-    int j = 1;
 
-    //if it is less than or equal to the tuple_head
-    if((comparison_node->row > newnode->row) && (comparison_node->col > newnode->col)){
-        j = 0;
+    //if the tuple head is equal to the current node, replace it
+    if ((comparison_node->col == newnode->col) && (comparison_node->row == newnode->row)){
+        newnode->next = comparison_node->next;
+        free(tuples->tuples_head);
+        tuples->tuples_head = malloc(sizeof(sp_tuples_node));
+        newnode = tuples->tuples_head;
+        free(comparison_node);
+        return;
+    }
+    if((newnode->col < comparison_node->col) && (newnode->row < comparison_node->col)){
         newnode->next = comparison_node;
         tuples->tuples_head = newnode;
-    }
-      if((comparison_node->row == newnode->row) && (comparison_node->col == newnode->col)){
-        j = 0;
-        comparison_node->value = newnode->value;
-        tuples->nz = tuples->nz - 1;
+        free(comparison_node);
+        return;
     }
 
-
-    //the while loop will not stop until I tell it to stop >:)
-    while (j == 1){
-        
-        comparison_node = comparison_node->next;    //go to next node in the linked list
-
-        //if the newnode has the same row as the comparison node
-        if (comparison_node->row == newnode->row){
-
-            //if the newnode has the exact same coordinates as the comparison node then replace the comparison with the newnode
-            if(comparison_node->col == newnode->col){
-                comparison_node->next = newnode->next;  //set the next pointer of the comparison node to that of the newnode
-                comparison_node = newnode;              //completely replace the comparision node with the newnode
-                tuples->nz = tuples->nz - 1;
-                free(newnode);
-                break;
-            }
-
-            //if the newnode is in a later col than the comparison node then insert it after the comparison
-            if (comparison_node->col < newnode->col){
-                newnode->next = comparison_node;
+    for (int i = 0; i <= tuples->nz; i++){
+        if(newnode->row >= comparison_node->row){
+            if(newnode->col > comparison_node->col){
+                newnode->next = comparison_node->next;
                 comparison_node->next = newnode;
-                break;
+                free(comparison_node);
+                return;
             }
-        }
-        //if the newnode row is greater than the comparison node row
-        if(comparison_node->row < newnode->row){
-
-            //if the newnode col is greater than the 
-            if (comparison_node->col < newnode->col){
-                newnode->next = comparison_node;
-                comparison_node->next = newnode;
-                break; 
+            if(newnode->col == comparison_node->col){
+                newnode->next = comparison_node->next;
+                comparison_node = newnode;
+                free(comparison_node);
+                return;
             }
         }
     }
-    free(comparison_node);
+
+
 }
 
+void elimnate_undesirables(sp_tuples * tuples){
+
+    sp_tuples_node * airport_security = tuples->tuples_head;
+
+
+    
+
+
+}
 
 sp_tuples * load_tuples(char* input_file)
 {
@@ -121,7 +114,7 @@ double gv_tuples(sp_tuples * mat_t,int row,int col)
         }
         checknode = checknode->next;
     }
-
+    free(checknode);
 
     return 0;
 }
@@ -131,6 +124,27 @@ double gv_tuples(sp_tuples * mat_t,int row,int col)
 void set_tuples(sp_tuples * mat_t, int row, int col, double value)
 {
     
+    sp_tuples_node * insert = malloc(sizeof(sp_tuples_node));
+
+    insert->row = row;
+    insert->col = col;
+    insert->value = value;
+
+    sp_tuples_node * comparison = malloc(sizeof(sp_tuples_node));
+    comparison = mat_t->tuples_head;
+
+    for(int i = 0; i <= mat_t->nz; i++){
+        if(comparison->row <= insert->row){
+            if(comparison->col == insert->col){
+
+            }
+            if(comparison->col < insert->col){
+                
+            }
+        }
+    }
+
+
     return;
 }
 
