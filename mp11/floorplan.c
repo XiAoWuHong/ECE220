@@ -56,6 +56,12 @@ void floorplan(const char file[]) {
 // Return 1 if the given slicing tree node is a leave node, and 0 otherwise.
 int is_leaf_node(node_t* ptr) {
   // TODO: (remember to modify the return value appropriately)
+
+  //if both the right and left node pointers equal NULL that means there are no child nodes for our given ptr and it is a leaf node
+  if ((ptr->right == NULL) && (ptr->left == NULL)){
+    return 1;
+  }
+
   return 0;
 }
 
@@ -63,6 +69,12 @@ int is_leaf_node(node_t* ptr) {
 // Return 1 if the given slicing tree node is an internal node, and 0 otherwise.
 int is_internal_node(node_t* ptr) {
   // TODO: (remember to modify the return value appropriately)
+
+  //if EITHER the right or left node pointers in the ptr are NOT NULL then that means the node is a parent node and must be internal
+  if((ptr->left != NULL) || (ptr->right != NULL)){
+    return 1;
+  }
+
   return 0;
 }
 
@@ -70,6 +82,13 @@ int is_internal_node(node_t* ptr) {
 // Return 1 if the given subtree rooted at node 'b' resides in the subtree rooted at node 'a'.
 int is_in_subtree(node_t* a, node_t* b) {
   // TODO: (remember to modify the return value appropriately)
+
+  while (b != NULL){
+    if(b == a){
+      return 1;
+    }
+    b = b->parent;
+  }
   return 0;
 }
 
@@ -191,6 +210,24 @@ node_t* init_slicing_tree(node_t* par, int n) {
   assert(n >= 0 && n < num_modules);
 
   // TODO:
+
+  node_t * ptr = (node_t*)malloc(sizeof(node_t));
+
+  //base case
+  if(n == num_modules - 1){
+    ptr->module = modules[n]
+  }
+
+  //internal node
+
+  //right child
+  ptr->right = (node_t*)malloc(sizeof(node_t));
+
+
+
+  //let child(recursive call)
+  ptr->left = init_slicing_tree(ptr, n+1);
+
   return NULL;
 }
 
