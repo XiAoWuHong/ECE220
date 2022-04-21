@@ -1,33 +1,19 @@
 Compilation Results:
 ********************
+floorplan.c: In function ‘node_t* init_slicing_tree(node_t*, int)’:
+floorplan.c:218:17: error: cannot convert ‘module_t {aka MODULE}’ to ‘module_t* {aka MODULE*}’ in assignment
+     ptr->module = modules[n]
+                 ^
+floorplan.c:219:3: error: expected ‘;’ before ‘}’ token
+   }
+   ^
+make: *** [floorplanner] Error 1
 
-./floorplanner grade/circuit1.txt
-
-****************************** VERIFICATION ******************************
-Circuit: 4 golden_modules, slicing tree size = 4 leaves and 3 internals
-(1) Function  'init_slicing_tree' : incorrect! +0
-    Golden: 32V1V0V
-    Yours : Invalid expression. Can't print. Please check your get_expression procedure.
-(2) Function  'is_leaf'           : incorrect! +0
-(3) Function  'is_internal'       : incorrect! +0
-(4) Function  'is_in_subtree'     : incorrect! +0
-(5) Procedure 'rotate'            : incorrect! +0
-(6) Procedure 'recut'             : incorrect! +0
-(7) Procedure 'swap_module'       : incorrect! +0
-(8) Procedure 'swap_topology'     : incorrect! +0
-(9) Procedure 'get_expression'    : incorrect! +0
-    Golden: 32V1V0V
-    Yours : Invalid expression. Can't print. Please check your get_expression procedure.
-(10)Procedure 'get_total_resource': incorrect! +0
-    Golden: Total_resource = 16
-    Yours : Total_resource = 0
-Your final score for this MP      : 0
-**************************** END VERIFICATION ****************************
-
+g++ -Wall -O3 -c floorplan.c -o floorplan.o
 
 Failed the nightly test.
 This nightly test is focusing on compilation error not functionality test.
 This nightly report only tests on the released testcases.
 There are many hidden edge testcase for the MP. Please test it yourselve.
 HIGHLY RECOMMEND YOU TO START YOUR MP EARLY!!!!!!!
-Timestamp: 2022-04-20_00:21:30
+Timestamp: 2022-04-21_00:21:24
