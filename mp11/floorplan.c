@@ -97,6 +97,14 @@ int is_in_subtree(node_t* a, node_t* b) {
 // and the width of the modules are swapped.
 void rotate(node_t* ptr) {
   // TODO: 
+  
+  //temporary variable to store whatever value we are swapping
+  int temp; 
+
+  temp = ptr->module->w;  //set the temp variable to w since that is what we are going to replace
+  ptr->module->w = ptr->module->h;  //replace w with the value for h
+  ptr->module->h = temp;  //replace h with the previous value for w
+
 }
 
 // Procedure: recut
@@ -107,6 +115,17 @@ void recut(node_t* ptr) {
   if(!is_internal_node(ptr)) return;
   assert(ptr->module == NULL && ptr->cutline != UNDEFINED_CUTLINE);
 
+  //if the cutline is H then switch it to V
+  if(ptr->cutline == H){
+    ptr->cutline = V;
+    return;
+  }
+
+  //if the cutline is V then switch it to H
+  if(ptr->cutline == V){
+    ptr->cutline = H;
+    return;
+  }
   // TODO:
   return;
 }
@@ -130,6 +149,8 @@ void swap_topology(node_t* a, node_t* b) {
   if(a->parent == NULL || b->parent == NULL) return;
   if(is_in_subtree(a, b) || is_in_subtree(b, a)) return;
   assert(a->parent != NULL && b->parent != NULL);
+
+  
  
   // TODO:
 }
