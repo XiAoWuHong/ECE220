@@ -1,5 +1,7 @@
 #include "floorplan.h"
 
+//Group members: Jacob Poeschel(jacobop2), Caleb Larson(calebsl3), V Verma (vverm2)
+
 // Global variables. The global variables will be effectice after the input has been parsed
 // by calling the procedure read_module.
 int num_modules;                                            // # of input modules.
@@ -137,7 +139,14 @@ void swap_module(node_t* a, node_t* b) {
   assert(a->module != NULL && a->cutline == UNDEFINED_CUTLINE);
   assert(b->module != NULL && b->cutline == UNDEFINED_CUTLINE);
 
+
+
   // TODO:
+
+  module_t* temp = (module_t*)malloc(sizeof(module_t)); // allocating temp pointer
+  temp = a->module;
+  a->module = b->module; // swapping modules a and b
+  b->module = temp;
 }
 
 // Procedure: swap_topology
@@ -150,8 +159,28 @@ void swap_topology(node_t* a, node_t* b) {
   if(is_in_subtree(a, b) || is_in_subtree(b, a)) return;
   assert(a->parent != NULL && b->parent != NULL);
 
+  // node_t* tempa = (node_t*)malloc(sizeof(node_t));
+  // node_t* tempb = (node_t*)malloc(sizeof(node_t));
+  node_t* temp = (node_t*)malloc(sizeof(node_t));
+
+  // tempa = a;
+  // tempb = b;
+
+  temp = a->parent;
+  a->parent = b->parent;
+  b->parent = temp;
+
+  if(a->parent->left == b)
+    a->parent->left = a;
+  else
+    a->parent->right = a;
+
+  if(b->parent->left == a)
+    b->parent->left = b;
+  else
+    b->parent->right = b;
+
   
- 
   // TODO:
 }
 
@@ -190,6 +219,14 @@ void postfix_traversal(node_t* ptr, int* nth, expression_unit_t* expression) {
   
   if(ptr == NULL) return;
 
+  postfix_traversal(ptr->left, nth, expression);
+  postfix_traversal(ptr->right, nth, expression);
+
+  expression[*nth].cutline = ptr->cutline;
+  expression[*nth].module = ptr->module;
+
+  *nth += 1;
+
   // TODO:
 }
 
@@ -198,6 +235,20 @@ void postfix_traversal(node_t* ptr, int* nth, expression_unit_t* expression) {
 int get_total_resource(node_t* ptr)
 {
   // TODO:
+
+  
+  int sum = 0;
+
+  if(ptr == NULL)
+    return 0;
+  
+  if(is_leaf_node(ptr))
+      sum += ptr->module->resource;
+
+  sum += get_total_resource(ptr->left);
+  sum += get_total_resource(ptr->right);
+
+  return sum;
 
   return 0;
 }
