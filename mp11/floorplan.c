@@ -150,6 +150,9 @@ void get_expression(node_t* root, int N, expression_unit_t* expression) {
   }
 
   // Obtain the expression using the postfix traversal.
+
+
+
   int nth = 0;
   postfix_traversal(root, &nth, expression);
 }
@@ -210,23 +213,46 @@ node_t* init_slicing_tree(node_t* par, int n) {
   assert(n >= 0 && n < num_modules);
 
   // TODO:
-
-  node_t * ptr = (node_t*)malloc(sizeof(node_t));
-
   //base case
   if(n == num_modules - 1){
-    ptr->module = modules[n]
+
+    //since this is the last node it contains a module despite the other left nodes not having one. This is because it has no children and no cutline
+    node_t* finale = (node_t*)malloc(sizeof(node_t)); //alocate memory for the last nodde
+    finale->module = &modules[n]; //add that last module 
+    finale->cutline = UNDEFINED_CUTLINE;  //there are no more nodes so there is no cut
+    finale->parent = par; //the parent node is par
+    //there are no children for the final node since it's the end of the tree
+    finale->left = NULL; 
+    finale->right = NULL;
+    
+    return finale;
   }
 
   //internal node
+  //the internal node does not contain a module because all it does it define the cutline that has happened
+  node_t* new_int_node = (node_t*)malloc(sizeof(node_t)); //allocate memory for the new node
+  new_int_node->parent = par; //the parent of the node is par 
+  new_int_node->cutline = V;  //only vertical cutlines for our first slice
+
 
   //right child
-  ptr->right = (node_t*)malloc(sizeof(node_t));
+  //the right child has no cutline but does have a module. 
+  node_t* new_right = (node_t*)malloc(sizeof(node_t));  //allocate memory for the right child, it will always be a leaf node
+  new_int_node->right = new_right;  //actually make it the right child of the internal node
+  new_right->parent = new_int_node; //it's parent is the internal node we just made
+  new_right->cutline = UNDEFINED_CUTLINE;
+  new_right->module = &modules[n];
+  //it has no children since it is a leaf node
+  new_right->right = NULL;
+  new_right->left = NULL;
 
 
+  //left child(recursive call)
+  node_t* new_left = init_slicing_tree(new_int_node, n+1);
 
-  //let child(recursive call)
-  ptr->left = init_slicing_tree(ptr, n+1);
+  new_int_node->left = new_left;  //make the parent's left equal to the left node that was created
+
+  return new_int_node;  //end it
 
   return NULL;
 }
