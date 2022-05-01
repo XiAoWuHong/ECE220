@@ -19,11 +19,11 @@ public:
 	//Base class' constructor should be called in derived classes'
 	//constructor to initizlize Shape's private variable 
   	Shape(string name) {
-
+		  name_ = name;
 	}
 	
   	string getName() {
-
+		  return name_;
 	}
 	
   	virtual double getArea() const = 0;
@@ -31,8 +31,6 @@ public:
 	
 private:
   string name_;
-
-
 };
 
 //Rectangle
@@ -43,31 +41,32 @@ template <class T>
 class Rectangle : public Shape{
 public:
   	Rectangle<T>(T width = 0, T length = 0):Shape("Rectangle") {
-
+		width_ = width;
+		length_ = length;
 	}
 	
   	double getArea() const {
-
+		  return width_ * length_;
 	}
 	
   	double getVolume() const {
-
+		  return 0;
 	}
 	
 	Rectangle<T> operator + (const Rectangle<T>& rec) {
-
+		return Rectangle(width, length);
 	}
 	
 	Rectangle<T> operator - (const Rectangle<T>& rec) {
-
+		return Rectangle(width, length);
 	} 
 	
 	T getWidth() const { 
-	
+		return width_;
 	}
 	
 	T getLength() const { 
-	
+		return length_;
 	}
 private:
 	T width_;
@@ -88,9 +87,17 @@ public:
 	
   	double getArea() const{
 
+		  double area = radius_^2 * PI * 4;
+
+		  return (double) area;
+
 	}
 	
  	double getVolume() const{
+
+		 double volume = 0;
+
+		 return (double) volume;
 
 	}
 	
@@ -197,6 +204,8 @@ private:
 // Return a vector of pointers that points to the objects 
 static list<Shape*> CreateShapes(char* file_name) {
 	//@@Insert your code here
+
+	Shape* shape_ptr = new Circle();
 	
 	return list<Shape*>(0, NULL);;
 }
