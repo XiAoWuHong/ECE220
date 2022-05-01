@@ -62,7 +62,7 @@ public:
 	Rectangle<T> operator - (const Rectangle<T>& rec) { 
 		double width = width_ - rec.getWidth();
 		if(width < 0){width = 0;}
-		double length = length_ - rec.getLength;
+		double length = length_ - rec.getLength();
 		if(length < 0){length = 0;}
 		return Rectangle(width, length);
 	} 
@@ -133,11 +133,11 @@ public:
 	}
 
   	double getVolume() const {
-		  return M_PI * 4 * pow(radius_, 2);
+		  return (4.0/3.0) * M_PI * pow(radius_, 3);
 	}	
 	
   	double getArea() const {
-		  return 4.0/3.0 * M_PI * pow(radius_, 3);
+		  return M_PI * 4 * pow(radius_, 2);
 	}
 
 	Sphere operator + (const Sphere& sph) {
@@ -173,12 +173,11 @@ public:
 	}
 	
   	double getVolume() const {
-		  return 2 * ((length_ * width_) + (length_ * height_) + (width_ * height_));
+		return length_ * width_ * height_;
 	}
   	
 	double getArea() const {
-		return length_ * width_ * height_;
-	}
+		return 2 * ((length_ * width_) + (length_ * height_) + (width_ * height_));	}
 	
 	RectPrism operator + (const RectPrism& rectp){
 		double width = width_ + rectp.getWidth();
@@ -219,6 +218,47 @@ private:
 // Return a vector of pointers that points to the objects 
 static list<Shape*> CreateShapes(char* file_name) {
 	//@@Insert your code here
+
+	ifstream reader (file_name);
+
+	int n;	//this is the numebr of shapes in the reader file
+	reader >> n;
+
+	list<Shape*> listyboi;
+	Shape* newShape;
+
+	//we now create an iterator
+	//I have no clue if this will work I am praying to gods that I thought I didn't believe in
+	for (int i = 0; i < n; i++){
+		string nombre;
+		reader >> nombre;
+
+		//please for the love of god work
+		if (nombre == "Rectangle") {
+			double w, l;
+			reader >> w >> l;
+			newShape = new Rectangle<double>(w,l);
+		}
+
+		else if(nombre == "Circle"){
+			double r;
+			reader >> r;
+			newShape = new Circle(r);
+		}
+		else if(nombre == "Sphere"){
+			double r;
+			reader >> r;
+			newShape = new Sphere(r);
+		}
+		else if(nombre == "RectPrism"){
+			double w, l, h;
+			reader >> w >> l >> h;
+			newShape = new RectPrism(w, l, h);
+		}
+	listyboi.push_back(newShape);
+	}
+	reader.close();
+	return listyboi;
 }
 
 // call getArea() of each object 
@@ -226,8 +266,13 @@ static list<Shape*> CreateShapes(char* file_name) {
 static double MaxArea(list<Shape*> shapes){
 	double max_area = 0;
 	//@@Insert your code here
+	//I've never prayed harder
+	for(list<Shape*>::iterator it = shapes.begin(); it != shapes.end(); it++){
+		Shape* ptr = *it;
+		double area = ptr->getArea();
+		max_area = fmax(area, max_area);
 
-
+	}
 	
 	return max_area;
 }
@@ -237,7 +282,11 @@ static double MaxArea(list<Shape*> shapes){
 static double MaxVolume(list<Shape*> shapes){
 	double max_volume = 0;
 	//@@Insert your code here
-
+	for(list<Shape*>::iterator it = shapes.begin(); it != shapes.end(); it++){
+		Shape* ptr = *it;
+		double vol = ptr->getVolume();
+		max_volume = fmax(vol, max_volume);
+	}
 	
 	return max_volume;
 }
