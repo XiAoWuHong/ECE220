@@ -54,10 +54,16 @@ public:
 	}
 	
 	Rectangle<T> operator + (const Rectangle<T>& rec) {
+		double width = width_ + rec.getWidth();
+		double length = length_ + rec.getLength();
 		return Rectangle(width, length);
 	}
 	
-	Rectangle<T> operator - (const Rectangle<T>& rec) {
+	Rectangle<T> operator - (const Rectangle<T>& rec) { 
+		double width = width_ - rec.getWidth();
+		if(width < 0){width = 0;}
+		double length = length_ - rec.getLength;
+		if(length < 0){length = 0;}
 		return Rectangle(width, length);
 	} 
 	
@@ -82,35 +88,30 @@ private:
 class Circle : public Shape{
 public:
   	Circle(double radius):Shape("Circle") {
-
+		  radius_ = radius;
 	}
 	
   	double getArea() const{
-
-		  double area = radius_^2 * PI * 4;
-
-		  return (double) area;
-
+		  return M_PI * pow(radius_, 2);
 	}
 	
  	double getVolume() const{
-
-		 double volume = 0;
-
-		 return (double) volume;
-
+		 return 0;
 	}
 	
   	Circle operator + (const Circle& cir){
-
+		  double radius = radius_ + cir.getRadius();
+		  return Circle(radius);
 	}
 	
 	Circle operator - (const Circle& cir){
-
+		double radius = radius_ - cir.getRadius();
+		if(radius < 0){radius = 0;}
+		return Circle(radius);
 	} 
 
 	double getRadius() const { 
-	
+		return radius_;
 	}
 	
 private:
@@ -204,10 +205,7 @@ private:
 // Return a vector of pointers that points to the objects 
 static list<Shape*> CreateShapes(char* file_name) {
 	//@@Insert your code here
-
-	Shape* shape_ptr = new Circle();
 	
-	return list<Shape*>(0, NULL);;
 }
 
 // call getArea() of each object 
@@ -215,6 +213,7 @@ static list<Shape*> CreateShapes(char* file_name) {
 static double MaxArea(list<Shape*> shapes){
 	double max_area = 0;
 	//@@Insert your code here
+
 
 	
 	return max_area;
